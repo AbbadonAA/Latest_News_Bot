@@ -1,1 +1,1 @@
-from .parser import router as parser_router # noqa
+from .parse_news import router as parser_router # noqa
