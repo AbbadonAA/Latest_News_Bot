@@ -6,5 +6,5 @@ main_router = APIRouter()
 main_router.include_router(
     parser_router,
     prefix='/parse_news',
-    tags=['News Parser']
+    tags=['Парсинг новостей']
 )

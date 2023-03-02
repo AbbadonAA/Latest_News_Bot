@@ -2,8 +2,8 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    app_title: str = 'Парсинг новостей'
-    app_description: str = 'API для парсинга новостных статей'
+    app_title: str = 'Парсинг'
+    app_description: str = 'API для запуска парсеров'
 
     class Config:
         env_file = '.env'
