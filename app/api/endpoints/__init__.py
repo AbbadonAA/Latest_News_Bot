@@ -1,0 +1,1 @@
+from .parser import router as parser_router # noqa
