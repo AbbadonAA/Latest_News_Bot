@@ -18,7 +18,8 @@ class Author(Base):
 
 class Article(Base):
     """Модель для статьи."""
-    date = mapped_column(DateTime, nullable=True)
+    # дата обязательна.
+    date = mapped_column(DateTime, nullable=False)
     category = mapped_column(String, nullable=False)
     title = mapped_column(String, nullable=False)
     overview = mapped_column(Text, nullable=True)
