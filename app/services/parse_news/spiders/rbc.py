@@ -1,9 +1,8 @@
 import datetime as dt
+import json
 import time
 
 import scrapy
-import json
-
 
 STANDART_CATEGORIES = {
     'Спорт', 'Политика', 'Бизнес', 'Финансы', 'Общество', 'Экономика'

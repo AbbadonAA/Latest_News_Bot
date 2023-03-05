@@ -4,7 +4,7 @@ router = APIRouter()
 
 
 @router.get('/get_news')
-async def get_news():
+async def get_articles():
     """Получение выбранного количества новых статей."""
     ans = {
         'title': 'Заголовок статьи',

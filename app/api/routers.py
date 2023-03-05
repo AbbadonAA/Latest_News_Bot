@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.endpoints import parser_router, news_router
+from app.api.endpoints import news_router, parser_router
 
 main_router = APIRouter()
 main_router.include_router(
