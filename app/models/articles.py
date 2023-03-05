@@ -5,18 +5,19 @@ from app.core.db import Base
 
 
 class Infographic(Base):
-    """Инфографика для статьи."""
+    """Модель для инфографики к статье."""
     article_id = Mapped[int] = mapped_column(ForeignKey('article.id'))
     image_link = Mapped[str] = mapped_column(String, nullable=True)
 
 
 class Author(Base):
-    """Авторы статьи."""
+    """Модель для автора статьи."""
     article_id = Mapped[int] = mapped_column(ForeignKey('article.id'))
     author_name = Mapped[str] = mapped_column(String, nullable=True)
 
 
 class Article(Base):
+    """Модель для статьи."""
     date = mapped_column(DateTime, nullable=False)
     category = mapped_column(String, nullable=False)
     title = mapped_column(String, nullable=False)
