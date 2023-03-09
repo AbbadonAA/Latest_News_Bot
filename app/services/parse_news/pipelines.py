@@ -10,4 +10,6 @@ from itemadapter import ItemAdapter
 
 class ParseNewsPipeline:
     def process_item(self, item, spider):
+        # dt.datetime.fromisoformat('str')
+        # Преобразование в корректную дату
         return item
