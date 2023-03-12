@@ -1,7 +1,9 @@
-from app.models.articles import Article, Author, Infographic
-from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
+
 from scrapy import Item
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.models.articles import Article, Author, Infographic
 
 
 async def add_article(session: AsyncSession, item: Item) -> Article:

@@ -3,8 +3,8 @@ import json
 import time
 
 import scrapy
-from ..items import ArticleItem
 
+from ..items import ArticleItem
 
 STANDART_CATEGORIES = {
     'Спорт', 'Политика', 'Бизнес', 'Финансы',
