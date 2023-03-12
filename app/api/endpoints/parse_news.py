@@ -6,6 +6,7 @@ router = APIRouter()
 @router.get('/parse_news')
 async def parse_news():
     """Запуск парсеров для заполнения БД."""
+    # В ответ - количество добавленных статей
     ans = {
         'title': 'Заголовок статьи',
         'image': 'Картинка',

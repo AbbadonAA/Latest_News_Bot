@@ -2,6 +2,7 @@ from typing import Optional
 
 from scrapy import Item
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, func
 
 from app.models.articles import Article, Author, Infographic
 
@@ -63,18 +64,24 @@ async def add_article_infographics(
     return infographic
 
 
-async def get_article_amount(session: AsyncSession) -> None:
+async def get_article_amount(session: AsyncSession) -> int:
     """Подсчет количества статей в БД."""
-    # Добавить в схемы - схема ответа с количеством статей в БД.
-    ...
+    amount = await session.scalar(select(func.count()).select_from(Article))
+    return amount
 
 
 async def check_article_existence(
     session: AsyncSession, link: str
  ) -> Optional[bool]:
     """Проверка наличия статьи в БД по ссылке."""
-    # Возвращает True / False
-    ...
+    existence = await session.execute(
+        select(
+            select(Article)
+            .where(Article.link == link)
+            .exists()
+        )
+    )
+    return existence.scalar()
 
 
 async def get_article_by_id(
