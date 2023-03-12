@@ -1,5 +1,6 @@
-from sqlalchemy import DateTime, ForeignKey, String, Text
+from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.types import TIMESTAMP
 
 from app.core.db import Base
 
@@ -23,7 +24,7 @@ class Author(Base):
 class Article(Base):
     """Модель для статьи."""
     # дата обязательна.
-    date = mapped_column(DateTime, nullable=False)
+    date = mapped_column(type_=TIMESTAMP(timezone=True), nullable=False)
     category = mapped_column(String, nullable=False)
     title = mapped_column(String, nullable=False)
     overview = mapped_column(Text, nullable=True)

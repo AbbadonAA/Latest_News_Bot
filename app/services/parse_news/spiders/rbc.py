@@ -59,6 +59,7 @@ class RbcSpider(scrapy.Spider):
             инфографика, авторы
         """
         date = response.css('time.article__header__date::attr(datetime)').get()
+        date = dt.datetime.fromisoformat(date)
         overview = (response.css('div.article__text__overview')
                     .css('span::text').get())
         if overview:

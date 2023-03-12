@@ -1,17 +1,64 @@
-from app.core.db import get_async_session
 from app.models.articles import Article, Author, Infographic
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 from scrapy import Item
 
 
-async def add_articles(session: AsyncSession, item: Item) -> None:
-    """Добавление статей в БД."""
-    # Возвращаем количество добавленных статей.
-    # Здесь запуск парсеров.
-    # До запуска - замер количества статей. После - ещё замер.
-    # Возвращаем схему с разницей = количество добавленных.
-    ...
+async def add_article(session: AsyncSession, item: Item) -> Article:
+    """Добавление статьи в БД."""
+    article = Article(
+        date=item['date'],
+        category=item['category'],
+        title=item['title'],
+        overview=item['overview'],
+        text=item['text'],
+        link=item['link'],
+        picture_link=item['picture_link'],
+        source=item['source']
+    )
+    session.add(article)
+    await session.commit()
+    await session.refresh(article)
+    article_id = article.id
+    authors = item['authors']
+    infographic_links = item['infographic_links']
+    if authors:
+        for author in authors:
+            await add_article_author(session, article_id, author)
+    if infographic_links:
+        for infographic_link in infographic_links:
+            await add_article_infographics(
+                session, article_id, infographic_link
+            )
+    return article
+
+
+async def add_article_author(
+    session: AsyncSession, article_id: int, author_name: str
+) -> Author:
+    """Добавление авторов статьи в БД."""
+    article_author = Author(
+        article_id=article_id,
+        author_name=author_name
+    )
+    session.add(article_author)
+    await session.commit()
+    await session.refresh(article_author)
+    return article_author
+
+
+async def add_article_infographics(
+    session: AsyncSession, article_id: int, infographic_link: str
+) -> Infographic:
+    """Добавление инфографики статьи в БД."""
+    infographic = Infographic(
+        article_id=article_id,
+        infographic_link=infographic_link
+    )
+    session.add(infographic)
+    await session.commit()
+    await session.refresh(infographic)
+    return infographic
 
 
 async def get_article_amount(session: AsyncSession) -> None:
