@@ -23,17 +23,29 @@ class Author(Base):
 
 class Article(Base):
     """Модель для статьи."""
-    # дата обязательна.
     date = mapped_column(type_=TIMESTAMP(timezone=True), nullable=False)
     category = mapped_column(String, nullable=False)
     title = mapped_column(String, nullable=False)
     overview = mapped_column(Text, nullable=True)
     text = mapped_column(Text, nullable=True)
     link = mapped_column(String, nullable=False, unique=True)
-    # Разобраться, как хранить картинки. Пока - string со ссылкой
+    # Разобраться, как хранить картинки. Пока - string со ссылкой.
     picture_link = mapped_column(String, nullable=True)
     infographic_links: Mapped[list['Infographic']] = (
-        relationship('Infographic', back_populates='articles', lazy='joined'))
+        relationship(
+            'Infographic',
+            back_populates='articles',
+            lazy='selectin',
+            cascade='all, delete-orphan'
+        )
+    )
     authors: Mapped[list['Author']] = (
-        relationship('Author', back_populates='articles', lazy='joined'))
+        relationship(
+            'Author',
+            back_populates='articles',
+            lazy='selectin',
+            cascade='all, delete-orphan'
+        )
+    )
+    # Добавить поле для хранения ссылок на видео.
     source = mapped_column(String, nullable=False)

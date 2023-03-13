@@ -1,13 +1,13 @@
 from typing import Optional
 
 from scrapy import Item
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
 
 from app.models.articles import Article, Author, Infographic
 
 
-async def add_article(session: AsyncSession, item: Item) -> Article:
+async def add_article_to_db(session: AsyncSession, item: Item) -> Article:
     """Добавление статьи в БД."""
     article = Article(
         date=item['date'],
@@ -27,16 +27,16 @@ async def add_article(session: AsyncSession, item: Item) -> Article:
     infographic_links = item['infographic_links']
     if authors:
         for author in authors:
-            await add_article_author(session, article_id, author)
+            await add_article_author_to_db(session, article_id, author)
     if infographic_links:
         for infographic_link in infographic_links:
-            await add_article_infographics(
+            await add_article_infographics_to_db(
                 session, article_id, infographic_link
             )
     return article
 
 
-async def add_article_author(
+async def add_article_author_to_db(
     session: AsyncSession, article_id: int, author_name: str
 ) -> Author:
     """Добавление авторов статьи в БД."""
@@ -50,7 +50,7 @@ async def add_article_author(
     return article_author
 
 
-async def add_article_infographics(
+async def add_article_infographics_to_db(
     session: AsyncSession, article_id: int, infographic_link: str
 ) -> Infographic:
     """Добавление инфографики статьи в БД."""
@@ -64,7 +64,7 @@ async def add_article_infographics(
     return infographic
 
 
-async def get_article_amount(session: AsyncSession) -> int:
+async def get_article_amount_from_db(session: AsyncSession) -> int:
     """Подсчет количества статей в БД."""
     amount = await session.scalar(select(func.count()).select_from(Article))
     return amount
@@ -84,7 +84,24 @@ async def check_article_existence(
     return existence.scalar()
 
 
-async def get_article_by_id(
+async def get_articles_from_db(
+    session: AsyncSession,
+    limit: int,
+    filter: str
+) -> list[Article]:
+    """Получение списка статей."""
+    stmt = select(Article)
+    if filter:
+        stmt = stmt.where(Article.category == filter)
+    articles = await session.execute(
+        stmt
+        .order_by(Article.date.desc())
+        .limit(limit)
+    )
+    return articles.scalars().all()
+
+
+async def get_article_by_id_from_db(
     session: AsyncSession,
     id: int
 ) -> None:
@@ -93,7 +110,7 @@ async def get_article_by_id(
     ...
 
 
-async def get_filtered_articles(
+async def get_filtered_articles_from_db(
     session: AsyncSession,
     amount: int,
     filter: Optional[str]
