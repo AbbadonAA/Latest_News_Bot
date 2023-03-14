@@ -64,11 +64,15 @@ class RbcSpider(scrapy.Spider):
                     .css('span::text').get())
         if overview:
             overview = overview.strip()
-        text = response.css('div.article__text').xpath('//p//text()').getall()
+        text = response.css('div.article__text')
+        text = [p.xpath('string()').get().strip() for p in text.xpath('//p')]
         if text:
-            text = ' '.join(t.strip() for t in text)
+            # Деление текста на абзацы и удаление лишних пробелов:
+            text = '\n'.join(t.strip() for t in text)
         picture_link = (response.css('div.article__main-image__wrap')
                         .css('img::attr(src)').get())
+        video_link = (response.css(
+            'span.article__inline-video__link::attr(data-mp4)')).get()
         infographic_links = (response.css('div.g-mobile-visible')
                              .css('div.article__picture__wrap')
                              .css('img::attr(src)').getall())
@@ -82,6 +86,7 @@ class RbcSpider(scrapy.Spider):
             text=text,
             link=response.request.url,
             picture_link=picture_link,
+            video_link=video_link,
             infographic_links=infographic_links,
             authors=authors,
             source=SOURCE

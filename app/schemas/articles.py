@@ -26,6 +26,9 @@ class Article(BaseModel):
     title: str
     overview: Optional[str]
     text: Optional[str]
+    link: str
+    picture_link: Optional[str]
+    video_link: Optional[str]
     authors: list[Author] = []
     infographic_links: list[Infographic] = []
 
