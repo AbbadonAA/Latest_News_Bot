@@ -1,9 +1,9 @@
+from datetime import datetime, timedelta
 from typing import Optional
 
-from datetime import datetime, timedelta
 from dateutil.tz import tzlocal
 from scrapy import Item
-from sqlalchemy import func, delete, select
+from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.articles import Article, Author, Infographic

@@ -6,6 +6,7 @@ load_dotenv()
 
 class Settings(BaseSettings):
     """Настройки проекта."""
+    # настройки приложения:
     app_title: str = 'LATEST NEWS PARSER'
     app_description: str = (
         'API для запуска парсеров и получения новостных статей')
@@ -15,6 +16,8 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
     DB_HOST: str
     DB_PORT: str
+    # бизнес-логика:
+    DAYS: int
 
     @property
     def database_url(self) -> str:
