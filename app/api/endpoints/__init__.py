@@ -1,2 +1,2 @@
-from .articles import router as news_router  # noqa
-from .parse_news import router as parser_router  # noqa
+from .articles import router as article_router  # noqa
+from .base_interact import router as db_router  # noqa

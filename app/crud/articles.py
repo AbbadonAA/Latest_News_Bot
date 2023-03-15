@@ -1,7 +1,9 @@
 from typing import Optional
 
+from datetime import datetime, timedelta
+from dateutil.tz import tzlocal
 from scrapy import Item
-from sqlalchemy import func, select
+from sqlalchemy import func, delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.articles import Article, Author, Infographic
@@ -111,11 +113,13 @@ async def get_article_by_id_from_db(
     ...
 
 
-async def get_filtered_articles_from_db(
+async def delete_old_articles_from_db(
     session: AsyncSession,
-    amount: int,
-    filter: Optional[str]
+    days: int,
 ) -> None:
-    """Получение amount статей, отфильтрованных по теме filter."""
-    # Вернуть список статей - list[схема для статьи]
-    ...
+    """Удаление устаревших статей статей."""
+    now_datetime = datetime.now(tzlocal()).replace(microsecond=0)
+    min_datetime = (now_datetime - timedelta(days=days))
+    stmt = delete(Article).where(Article.date < min_datetime)
+    await session.execute(stmt)
+    await session.commit()

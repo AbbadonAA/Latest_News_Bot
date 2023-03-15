@@ -1,15 +1,15 @@
 from fastapi import APIRouter
 
-from app.api.endpoints import news_router, parser_router
+from app.api.endpoints import article_router, db_router
 
 main_router = APIRouter()
 main_router.include_router(
-    parser_router,
-    prefix='/parse_news',
-    tags=['Парсинг новостей']
+    db_router,
+    prefix='/db_interact',
+    tags=['Управление БД: парсинг и удаление устаревших данных']
 )
 main_router.include_router(
-    news_router,
-    prefix='/news_router',
+    article_router,
+    prefix='/articles',
     tags=['Получение статей']
 )

@@ -7,7 +7,8 @@ from app.core.db import Base
 
 class Infographic(Base):
     """Модель для инфографики к статье."""
-    article_id: Mapped[int] = mapped_column(ForeignKey('article.id'))
+    article_id: Mapped[int] = mapped_column(
+        ForeignKey('article.id', ondelete='CASCADE'))
     infographic_link: Mapped[str] = mapped_column(String)
     articles: Mapped[list['Article']] = (
         relationship('Article', back_populates='infographic_links'))
@@ -15,7 +16,8 @@ class Infographic(Base):
 
 class Author(Base):
     """Модель для автора статьи."""
-    article_id: Mapped[int] = mapped_column(ForeignKey('article.id'))
+    article_id: Mapped[int] = mapped_column(
+        ForeignKey('article.id', ondelete='CASCADE'))
     author_name: Mapped[str] = mapped_column(String)
     articles: Mapped[list['Article']] = (
         relationship('Article', back_populates='authors'))
