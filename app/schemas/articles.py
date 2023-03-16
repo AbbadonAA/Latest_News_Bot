@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 
 class Author(BaseModel):
@@ -31,6 +31,13 @@ class Article(BaseModel):
     video_link: Optional[str]
     authors: list[Author] = []
     infographic_links: list[Infographic] = []
+
+    @validator('date')
+    def change_date_format(cls, value):
+        # Pydantic не учитывает timezone, хотя в БД всё корректно.
+        # Пока такой простой костыль исправляет это поведение.
+        value = value + timedelta(hours=3)
+        return value.strftime('%d/%m/%Y %H:%M')
 
     class Config:
         orm_mode = True
