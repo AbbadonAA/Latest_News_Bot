@@ -106,11 +106,12 @@ async def get_articles_from_db(
 
 async def get_article_by_id_from_db(
     session: AsyncSession,
-    id: int
+    article_id: int
 ) -> None:
     """Получение статьи по её id в БД."""
-    # Возвращается схема статьи, полученной из БД.
-    ...
+    stmt = select(Article).where(Article.id == article_id)
+    article = await session.execute(stmt)
+    return article.scalar()
 
 
 async def delete_old_articles_from_db(
