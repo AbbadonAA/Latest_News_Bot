@@ -11,7 +11,7 @@ NEWSPIDER_MODULE = "parse_news.spiders"
 ROBOTSTXT_OBEY = True
 
 ITEM_PIPELINES = {
-   "parse_news.pipelines.ArticlesToDBPipeline": 300,
+   "app.services.parse_news.pipelines.ArticlesToDBPipeline": 300,
 }
 
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
