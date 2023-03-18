@@ -5,8 +5,10 @@ import time
 import scrapy
 
 from ..items import ArticleItem
+from ..settings import STANDART_CATEGORIES
 
-STANDART_CATEGORIES = {
+
+RBC_CATEGORIES = {
     'Спорт', 'Политика', 'Бизнес', 'Финансы',
     'Общество', 'Экономика', 'Крипто'
 }
@@ -35,15 +37,17 @@ class RbcSpider(scrapy.Spider):
                             .css('div.js-news-feed-item')
                             .xpath('@data-modif').get())
             category = selector.css('a.item__category::text').get()
-            # Пропуск платных статей (отмечены img вместо текста в категории)
+            # Пропуск платных статей (отмечены img вместо текста в категории).
             if not category:
                 continue
             category = category.replace(',', '').strip()
             title = selector.css('span.item__title::text').get().strip()
-            # Пропуск нестандартных статей (онлайн репортажи и статьи РБК)
-            if category not in STANDART_CATEGORIES or 'Онлайн' in title:
+            # Пропуск нестандартных статей (онлайн репортажи и статьи РБК).
+            if category not in RBC_CATEGORIES or 'Онлайн' in title:
                 continue
             link = selector.css('a.item__link::attr(href)').get().strip()
+            # Приведение категории статьи к стандартным для всех статей.
+            category = STANDART_CATEGORIES[category]
             yield response.follow(
                 link,
                 callback=self.parse_article,
@@ -65,7 +69,7 @@ class RbcSpider(scrapy.Spider):
         if overview:
             overview = overview.strip()
         text = response.css('div.article__text')
-        text = [p.xpath('string()').get().strip() for p in text.xpath('//p')]
+        text = [p.xpath('string()').get().strip() for p in text.css('p')]
         if text:
             # Деление текста на абзацы и удаление лишних пробелов:
             text = '\n'.join(t.strip() for t in text)

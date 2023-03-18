@@ -17,3 +17,12 @@ ITEM_PIPELINES = {
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+STANDART_CATEGORIES = {
+    'Спорт': 'Спорт',
+    'Политика': 'Политика',
+    'Экономика': 'Экономика',
+    'Бизнес': 'Экономика',
+    'Финансы': 'Экономика',
+    'Крипто': 'Экономика',
+    'Общество': 'Общество',
+}
