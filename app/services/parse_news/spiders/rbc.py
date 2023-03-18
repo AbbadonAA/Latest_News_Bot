@@ -57,11 +57,7 @@ class RbcSpider(scrapy.Spider):
                 URL.format(last_time, LIMIT), callback=self.parse)
 
     def parse_article(self, response):
-        """
-        Парсинг отдельной статьи:
-            дата, обзор, текст, изображение,
-            инфографика, авторы
-        """
+        """Парсинг отдельной статьи."""
         date = response.css('time.article__header__date::attr(datetime)').get()
         date = dt.datetime.fromisoformat(date)
         overview = (response.css('div.article__text__overview')
