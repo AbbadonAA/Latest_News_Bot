@@ -16,7 +16,7 @@ async def get_article_amount(session: AsyncSession = Depends(get_session)):
     """Получение количества статей в БД."""
     article_amount = await get_article_amount_from_db(session)
     ans = {
-        'article_count': article_amount,
+        'article_amount': article_amount,
     }
     return ans
 
@@ -24,7 +24,7 @@ async def get_article_amount(session: AsyncSession = Depends(get_session)):
 @router.get('/', response_model=list[Article])
 async def get_all_articles(
     session: AsyncSession = Depends(get_session),
-    limit: str | None = None,
+    limit: int | None = None,
     filter: str | None = None
 ):
     """Получение статей с ограничением количества и фильтром категорий."""

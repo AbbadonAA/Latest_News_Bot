@@ -7,7 +7,6 @@ import scrapy
 from ..items import ArticleItem
 from ..settings import STANDART_CATEGORIES
 
-
 RBC_CATEGORIES = {
     'Спорт', 'Политика', 'Бизнес', 'Финансы',
     'Общество', 'Экономика', 'Крипто'
