@@ -1,6 +1,7 @@
 aiosqlite==0.18.0
 alembic==1.10.0
 anyio==3.6.2
+asyncpg==0.27.0
 attrs==22.2.0
 Automat==22.10.0
 certifi==2022.12.7
@@ -38,6 +39,7 @@ pydantic==1.10.5
 PyDispatcher==2.0.7
 pyflakes==3.0.1
 pyOpenSSL==23.0.0
+python-dateutil==2.8.2
 python-dotenv==1.0.0
 PyYAML==6.0
 queuelib==1.6.2
