@@ -16,9 +16,7 @@ router = APIRouter()
 async def get_article_amount(session: AsyncSession = Depends(get_session)):
     """Получение количества статей в БД."""
     article_amount = await get_article_amount_from_db(session)
-    ans = {
-        'article_amount': article_amount,
-    }
+    ans = {'article_amount': article_amount}
     return ans
 
 
