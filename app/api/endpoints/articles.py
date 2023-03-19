@@ -1,11 +1,12 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.db import get_session
 from ...crud.articles import (get_article_amount_from_db,
                               get_article_by_id_from_db, get_articles_from_db)
+from ...filters.articles import ThemeFilter
 from ...schemas.articles import Article
 
 router = APIRouter()
@@ -22,13 +23,16 @@ async def get_article_amount(session: AsyncSession = Depends(get_session)):
 
 
 @router.get('/', response_model=list[Article])
-async def get_all_articles(
+async def get_articles(
     session: AsyncSession = Depends(get_session),
-    limit: int | None = None,
-    filter: str | None = None
+    limit: int = Query(default=10, gt=0, le=10),
+    filter: ThemeFilter = None
 ):
     """Получение статей с ограничением количества и фильтром категорий."""
-    articles = await get_articles_from_db(session, limit, filter)
+    articles = (
+        await get_articles_from_db(
+            session, limit, filter.value if filter else None)
+    )
     return articles
 
 
