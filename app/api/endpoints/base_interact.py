@@ -19,13 +19,7 @@ async def start_parsers(
     """Запуск парсеров для заполнения БД."""
     count_before_add = await get_article_amount_from_db(session)
     args = ["python", "-m", "scrapy.cmdline", "crawl", "rbc_spider"]
-    # subprocess.run(args, cwd="../../services/parse_news")
-    # subprocess.run(args, cwd="/app/services/parse_news")
-    # Тут нужно решить проблему с относительным путем.
-    subprocess.run(
-        args,
-        cwd="/home/abbadon/dev/Latest_News_Bot/app/services/parse_news"
-    )
+    subprocess.run(args, cwd="app/services/parse_news")
     count_after_add = await get_article_amount_from_db(session)
     num_added = count_after_add - count_before_add
     return {'result': f'В БД успешно добавлено {num_added} записей.'}
