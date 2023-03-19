@@ -118,7 +118,7 @@ async def delete_old_articles_from_db(
     session: AsyncSession,
     days: int,
 ) -> None:
-    """Удаление устаревших статей статей."""
+    """Удаление устаревших статей."""
     now_datetime = datetime.now(tzlocal()).replace(microsecond=0)
     min_datetime = (now_datetime - timedelta(days=days))
     stmt = delete(Article).where(Article.date < min_datetime)

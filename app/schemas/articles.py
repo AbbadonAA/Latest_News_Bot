@@ -5,6 +5,7 @@ from pydantic import BaseModel, validator
 
 
 class Author(BaseModel):
+    """Схема - Автор статьи."""
     author_name: str
 
     class Config:
@@ -12,6 +13,7 @@ class Author(BaseModel):
 
 
 class Infographic(BaseModel):
+    """Схема - инфографика к статье."""
     infographic_link: str
 
     class Config:
@@ -19,6 +21,7 @@ class Infographic(BaseModel):
 
 
 class Article(BaseModel):
+    """Схема - Статья."""
     id: int
     source: str
     date: datetime
