@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ...core.db import get_session
 from ...crud.articles import (get_article_amount_from_db,
                               get_article_by_id_from_db, get_articles_from_db)
-from ...filters.articles import ThemeFilter
+from ...filters.articles import ThemeFilter, SourceFilter
 from ...schemas.articles import Article
 
 router = APIRouter()
@@ -24,12 +24,17 @@ async def get_article_amount(session: AsyncSession = Depends(get_session)):
 async def get_articles(
     session: AsyncSession = Depends(get_session),
     limit: int = Query(default=10, gt=0, le=10),
+    source: SourceFilter = None,
     filter: ThemeFilter = None
 ):
     """Получение статей с ограничением количества и фильтром категорий."""
     articles = (
         await get_articles_from_db(
-            session, limit, filter.value if filter else None)
+            session,
+            limit,
+            filter.value if filter else None,
+            source.value if source else None
+        )
     )
     return articles
 

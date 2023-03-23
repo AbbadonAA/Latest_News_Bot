@@ -90,10 +90,13 @@ async def check_article_existence(
 async def get_articles_from_db(
     session: AsyncSession,
     limit: int,
-    filter: str
+    filter: str,
+    source: str
 ) -> list[Article]:
     """Получение списка статей."""
     stmt = select(Article)
+    if source:
+        stmt = stmt.where(Article.source == source)
     if filter:
         stmt = stmt.where(Article.category == filter)
     articles = await session.execute(
