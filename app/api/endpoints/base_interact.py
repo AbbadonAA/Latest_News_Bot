@@ -9,6 +9,9 @@ from ...core.db import get_session
 from ...crud.articles import (delete_old_articles_from_db,
                               get_article_amount_from_db)
 
+
+SPIDERS = ['rbc_spider', 'inosmi_spider']
+
 router = APIRouter()
 
 
@@ -18,8 +21,9 @@ async def start_parsers(
 ):
     """Запуск парсеров для заполнения БД."""
     count_before_add = await get_article_amount_from_db(session)
-    args = ["python", "-m", "scrapy.cmdline", "crawl", "rbc_spider"]
-    subprocess.run(args, cwd="app/services/parse_news")
+    for spider in SPIDERS:
+        args = ["python", "-m", "scrapy.cmdline", "crawl", spider]
+        subprocess.run(args, cwd="app/services/parse_news")
     count_after_add = await get_article_amount_from_db(session)
     num_added = count_after_add - count_before_add
     return {'result': f'В БД успешно добавлено {num_added} записей.'}

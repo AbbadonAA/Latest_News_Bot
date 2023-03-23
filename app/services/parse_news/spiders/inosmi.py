@@ -1,9 +1,11 @@
-import scrapy
-from ..items import ArticleItem
-# from ..settings import STANDART_CATEGORIES
+import datetime as dt
 
+import scrapy
+
+from ..items import ArticleItem
 
 INOSMI_CATEGORIES = {'Политика', 'Экономика', 'Общество'}
+SOURCE = 'ИноСМИ'
 
 
 class InosmiSpider(scrapy.Spider):
@@ -27,13 +29,52 @@ class InosmiSpider(scrapy.Spider):
 
     def parse_category(self, response):
         """Парсинг ссылок на статьи на странице категории."""
-        # в рамках проекта достаточно ссылок на первой стр. (без прокрутки).
-        articles = response.css('div.list-item')
-        # отсюда: заголовок (источник + заголовок), картинка, ссылка на статью
-        # переход в статью для парсинга текста.
+        articles = response.css('div.list-item__content')
         for article in articles:
-            article_link = article.css('div.list-item__source').css('a.list-item__title::text').get()
-            yield {'article_link': article_link}
+            source = article.css('div.source').css('a::text').get()
+            title = article.css('a.list-item__title::text').get()
+            if title:
+                title = title.strip()
+            if source:
+                title = source + ': ' + title
+            category = response.meta.get('category')
+            link = article.css('a.list-item__title::attr(href)').get()
+            link = self.start_urls[0] + link
+            yield response.follow(
+                link,
+                callback=self.parse_article,
+                meta={'category': category, 'title': title}
+            )
 
-    # def parse_article(self, response):
-    #     ...
+    def parse_article(self, response):
+        """Парсинг данных в статье."""
+        date = response.css('div.endless__item::attr(data-published)').get()
+        date = dt.datetime.fromisoformat(date)
+        overview = response.css('div.article__announce-text::text').get()
+        if overview:
+            overview = overview.strip()
+        text = response.css('div.article__text')
+        text = [txt.xpath('string()').get().strip() for txt in text]
+        if text:
+            exclude = 'Читайте ИноСМИ в'
+            text = '\n'.join(t.strip() for t in text if exclude not in t)
+        authors = (response
+                   .css('div.article__authors-item')
+                   .css('a::text').getall())
+        picture_link = response.css('div.media').css('img::attr(src)').get()
+        video_link = response.css('div.media').css('iframe::attr(src)').get()
+        infographic_links = []
+        article = dict(
+            date=date,
+            category=response.meta.get('category'),
+            title=response.meta.get('title'),
+            overview=overview,
+            text=text,
+            link=response.request.url,
+            picture_link=picture_link,
+            video_link=video_link,
+            infographic_links=infographic_links,
+            authors=authors,
+            source=SOURCE
+        )
+        yield ArticleItem(article)
