@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ...core.db import get_session
 from ...crud.articles import (get_article_amount_from_db,
                               get_article_by_id_from_db, get_articles_from_db)
-from ...filters.articles import ThemeFilter, SourceFilter
+from ...filters.articles import SourceFilter, ThemeFilter
 from ...schemas.articles import Article
 
 router = APIRouter()

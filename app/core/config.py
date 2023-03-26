@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
     DB_HOST: str
     DB_PORT: str
+    # хеширование токенов:
+    secret: str = 'SECRET'
     # бизнес-логика:
     DAYS: int
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.endpoints import article_router, db_router
+from app.api.endpoints import article_router, db_router, user_router
 
 main_router = APIRouter()
 main_router.include_router(
@@ -12,4 +12,7 @@ main_router.include_router(
     article_router,
     prefix='/articles',
     tags=['Получение статей']
+)
+main_router.include_router(
+    user_router
 )

@@ -1,7 +1,8 @@
-from app.core.db import engine
-from app.crud.articles import add_article_to_db, check_article_existence
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
+
+from app.core.db import engine
+from app.crud.articles import add_article_to_db, check_article_existence
 
 
 class ArticlesToDBPipeline:

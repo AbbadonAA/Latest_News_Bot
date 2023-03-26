@@ -9,7 +9,6 @@ from ...core.db import get_session
 from ...crud.articles import (delete_old_articles_from_db,
                               get_article_amount_from_db)
 
-
 SPIDERS = ['rbc_spider', 'inosmi_spider']
 
 router = APIRouter()

@@ -50,5 +50,5 @@ class Article(Base):
             cascade='all, delete-orphan'
         )
     )
-    # Добавить поле для хранения ссылок на видео.
+    # Добавить связь с User через secondary table.
     source = mapped_column(String, nullable=False)
