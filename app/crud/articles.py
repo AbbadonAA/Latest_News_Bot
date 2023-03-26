@@ -5,8 +5,9 @@ from dateutil.tz import tzlocal
 from scrapy import Item
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
-from app.models.articles import Article, Author, Infographic
+from app.models import Article, ArticleUser, Author, Infographic, UserModel
 
 
 async def add_article_to_db(session: AsyncSession, item: Item) -> Article:
@@ -87,30 +88,48 @@ async def check_article_existence(
     return existence.scalar()
 
 
+async def mark_articles_as_read(
+    user: UserModel, articles: list[Article], session: AsyncSession
+):
+    """Помечание статей прочитанных пользователем."""
+    article_users = [
+        ArticleUser(
+            article_id=article.id, user_id=user.id) for article in articles
+    ]
+    session.add_all(article_users)
+    await session.commit()
+
+
 async def get_articles_from_db(
+    user: UserModel,
     session: AsyncSession,
     limit: int,
-    filter: str,
+    category_filter: str,
     source: str
 ) -> list[Article]:
     """Получение списка статей."""
-    stmt = select(Article)
+    stmt = select(Article).options(selectinload(Article.readers))
     if source:
         stmt = stmt.where(Article.source == source)
-    if filter:
-        stmt = stmt.where(Article.category == filter)
+    if category_filter:
+        stmt = stmt.where(Article.category == category_filter)
+    # Исключение статей, которые пользователь уже читал.
+    stmt = stmt.filter(~Article.readers.contains(user))
     articles = await session.execute(
         stmt
         .order_by(Article.date.desc())
         .limit(limit)
     )
-    return articles.scalars().all()
+    articles = articles.scalars().all()
+    if articles:
+        await mark_articles_as_read(user, articles, session)
+    return articles
 
 
 async def get_article_by_id_from_db(
     session: AsyncSession,
     article_id: int
-) -> None:
+) -> Article:
     """Получение статьи по её id в БД."""
     stmt = select(Article).where(Article.id == article_id)
     article = await session.execute(stmt)

@@ -1,8 +1,24 @@
-from sqlalchemy import ForeignKey, String, Text
+from sqlalchemy import Column, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import TIMESTAMP
 
 from app.core.db import Base
+
+from .user import UserModel
+
+
+class ArticleUser(Base):
+    """Модель для связи статей и прочитавших их пользователей."""
+    article_id = Column(
+        Integer,
+        ForeignKey('article.id', ondelete='CASCADE'),
+        primary_key=True
+    )
+    user_id = Column(
+        Integer,
+        ForeignKey('user.id', ondelete='CASCADE'),
+        primary_key=True
+    )
 
 
 class Infographic(Base):
@@ -50,5 +66,10 @@ class Article(Base):
             cascade='all, delete-orphan'
         )
     )
-    # Добавить связь с User через secondary table.
+    readers: Mapped[list['UserModel']] = (
+        relationship(
+            'UserModel',
+            secondary='articleuser'
+        )
+    )
     source = mapped_column(String, nullable=False)

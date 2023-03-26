@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 
 from ...core.db import get_session
+from ...core.user import current_superuser
 from ...crud.articles import (delete_old_articles_from_db,
                               get_article_amount_from_db)
 
@@ -14,7 +15,7 @@ SPIDERS = ['rbc_spider', 'inosmi_spider']
 router = APIRouter()
 
 
-@router.post('/')
+@router.post('/', dependencies=[Depends(current_superuser)])
 async def start_parsers(
     session: AsyncSession = Depends(get_session)
 ):
@@ -28,7 +29,7 @@ async def start_parsers(
     return {'result': f'В БД успешно добавлено {num_added} записей.'}
 
 
-@router.delete('/')
+@router.delete('/', dependencies=[Depends(current_superuser)])
 async def delete_old_articles(
     session: AsyncSession = Depends(get_session),
     days: int = settings.DAYS
