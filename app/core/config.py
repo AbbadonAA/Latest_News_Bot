@@ -1,5 +1,7 @@
+from typing import Optional
+
 from dotenv import load_dotenv
-from pydantic import BaseSettings
+from pydantic import BaseSettings, EmailStr
 
 load_dotenv()
 
@@ -20,6 +22,10 @@ class Settings(BaseSettings):
     secret: str = 'SECRET'
     # бизнес-логика:
     DAYS: int
+    # первый суперпользователь:
+    first_superuser_email: Optional[EmailStr] = None
+    first_superuser_password: Optional[str] = None
+    first_superuser_chat_id: Optional[int] = None
 
     @property
     def database_url(self) -> str:
