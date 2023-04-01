@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     first_superuser_email: Optional[EmailStr] = None
     first_superuser_password: Optional[str] = None
     first_superuser_chat_id: Optional[int] = None
+    # данные бота:
+    bot_token: str
 
     @property
     def database_url(self) -> str:
