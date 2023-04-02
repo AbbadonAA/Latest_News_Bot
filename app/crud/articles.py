@@ -103,7 +103,6 @@ async def mark_articles_as_read(
 async def get_articles_from_db(
     user: UserModel,
     session: AsyncSession,
-    limit: int,
     category_filter: str,
     source: str
 ) -> list[Article]:
@@ -118,7 +117,7 @@ async def get_articles_from_db(
     articles = await session.execute(
         stmt
         .order_by(Article.date.desc())
-        .limit(limit)
+        .limit(user.article_limit)
     )
     articles = articles.scalars().all()
     if articles:

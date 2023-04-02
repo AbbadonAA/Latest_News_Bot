@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.db import get_session
@@ -26,7 +26,6 @@ async def get_article_amount(session: AsyncSession = Depends(get_session)):
 async def get_articles(
     user: UserModel = Depends(current_user),
     session: AsyncSession = Depends(get_session),
-    limit: int = Query(default=10, gt=0, le=10),
     source: SourceFilter = None,
     category_filter: ThemeFilter = None,
 ):
@@ -35,7 +34,6 @@ async def get_articles(
         await get_articles_from_db(
             user,
             session,
-            limit,
             category_filter.value if category_filter else None,
             source.value if source else None,
         )

@@ -56,4 +56,19 @@ async def get_user_by_chat_id_from_db(
     """Получение пользователя по chat_id."""
     stmt = select(UserModel).where(UserModel.chat_id == chat_id)
     user = await session.execute(stmt)
+    # Добавить raise Exception, если не найден.
     return user.scalar()
+
+
+async def update_user_article_limit(
+    session: AsyncSession,
+    chat_id: int,
+    article_limit: int
+) -> UserModel:
+    """Изменение article_limit пользователя."""
+    user = await get_user_by_chat_id_from_db(session, chat_id)
+    user.article_limit = article_limit
+    session.add(user)
+    await session.commit()
+    await session.refresh(user)
+    return user
