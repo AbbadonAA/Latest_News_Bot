@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 
 from app.api.routers import main_router
+from app.bot.main import start_bot
 from app.core.config import settings
 from app.core.init_db import create_first_superuser
-from app.bot.main import start_bot
 
 
 def create_app() -> FastAPI:
@@ -24,7 +24,6 @@ def create_app() -> FastAPI:
     @app.on_event('shutdown')
     async def on_shutdown():
         """Действия при остановке сервера."""
-        # Добавить остановку бота.
         bot_instance = app.state.bot_instance
         await bot_instance.updater.stop()
         # Для webhook:
