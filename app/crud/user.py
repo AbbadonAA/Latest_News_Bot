@@ -60,15 +60,25 @@ async def get_user_by_chat_id_from_db(
     return user.scalar()
 
 
-async def update_user_article_limit(
+async def update_user_article_limit_db(
     session: AsyncSession,
     chat_id: int,
     article_limit: int
-) -> UserModel:
+) -> int:
     """Изменение article_limit пользователя."""
     user = await get_user_by_chat_id_from_db(session, chat_id)
     user.article_limit = article_limit
     session.add(user)
     await session.commit()
     await session.refresh(user)
-    return user
+    return user.article_limit
+
+
+async def get_user_article_limit_from_db(
+    session: AsyncSession,
+    chat_id: int
+) -> int:
+    """Получение актуального лимита статей пользователя."""
+    stmt = select(UserModel.article_limit).where(UserModel.chat_id == chat_id)
+    article_limit = await session.execute(stmt)
+    return article_limit.scalar()

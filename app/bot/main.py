@@ -1,9 +1,9 @@
 # import logging
-from telegram.ext import Application, ApplicationBuilder, CommandHandler
+from telegram.ext import Application, ApplicationBuilder
 
 from app.core.config import settings
 
-from .handlers import start_handler
+from .handlers import conv_handler
 
 # logging.basicConfig(
 #     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -14,7 +14,7 @@ from .handlers import start_handler
 def create_bot() -> Application:
     """Создание бота."""
     bot_instance = ApplicationBuilder().token(settings.bot_token).build()
-    bot_instance.add_handler(CommandHandler('start', start_handler))
+    bot_instance.add_handler(conv_handler)
     return bot_instance
 
 
