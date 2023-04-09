@@ -1,147 +1,149 @@
-import telegram
 from telegram import Update
-from telegram.ext import (CommandHandler, ContextTypes, ConversationHandler,
-                          MessageHandler, filters)
-
-from app.filters.articles import SourceFilter, ThemeFilter
+from telegram.ext import (CallbackQueryHandler, CommandHandler, ContextTypes,
+                          ConversationHandler)
 
 from .jobs import (get_or_create_user, get_user_article_limit,
                    update_user_article_limit)
-
-CON_TYPE = ContextTypes.DEFAULT_TYPE
-
-MAIN_MENU, SOURCE_MENU, THEME_MENU, SETTINGS_MENU = range(4)
-
-MAIN_KEYBOARD = [['Статьи', 'Настройки']]
-SOURCE_KEYBOARD = [[s.value for s in SourceFilter], ['Назад']]
-THEME_KEYBOARD = [[t.value for t in ThemeFilter], ['Назад']]
-SETTINGS_KEYBOARD = [[str(lt) for lt in range(1, 11)], ['Назад']]
+from .menu import (MAIN_MENU_NUM, MAIN_MENU_TXT, SETTINGS_MENU_NUM,
+                   SETTINGS_MENU_TXT, SOURCE_MENU_NUM, SOURCE_MENU_TXT,
+                   THEME_MENU_NUM, THEME_MENU_TXT, main_keyboard, pattern,
+                   settings_keyboard, source_keyboard, theme_keyboard)
 
 
-async def reply_with_keyboard(
-    update: Update,
-    text: str,
-    keyboard: list[list[str]],
-    menu: int
+async def start_manager(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
 ):
-    """Шаблон ответа с выбором клавиатуры и меню."""
-    await update.message.reply_text(
-        text=text,
-        reply_markup=telegram.ReplyKeyboardMarkup(
-            keyboard, resize_keyboard=True
-        )
-    )
-    return menu
-
-
-async def get_main_menu(update: Update):
-    """Вызов главного меню."""
-    text = 'Нажмите "Статьи" для получения последних новостей:'
-    keyboard = MAIN_KEYBOARD
-    menu = MAIN_MENU
-    return await reply_with_keyboard(update, text, keyboard, menu)
-
-
-async def get_settings_menu(update: Update):
-    """Вызов меню настроек."""
-    chat_id = update.effective_chat.id
-    article_limit = await get_user_article_limit(chat_id)
-    text = (
-        'Выберите количество получаемых статей.\n'
-        f'Сейчас выбрано: {article_limit}')
-    keyboard = SETTINGS_KEYBOARD
-    menu = SETTINGS_MENU
-    return await reply_with_keyboard(update, text, keyboard, menu)
-
-
-async def get_source_menu(update: Update):
-    """Вызов меню источников."""
-    text = 'Выберите источник:'
-    keyboard = SOURCE_KEYBOARD
-    menu = SOURCE_MENU
-    return await reply_with_keyboard(update, text, keyboard, menu)
-
-
-async def get_theme_menu(update: Update):
-    """Вызов меню тем."""
-    text = 'Выберите тему:'
-    keyboard = THEME_KEYBOARD
-    menu = THEME_MENU
-    return await reply_with_keyboard(update, text, keyboard, menu)
-
-
-async def start(update: Update, context: CON_TYPE):
-    """Обработка команды /start."""
+    """Управление главным меню после команды /start."""
     chat_id = update.effective_chat.id
     await get_or_create_user(chat_id)
-    return await get_main_menu(update)
+    await update.message.reply_text(MAIN_MENU_TXT, reply_markup=main_keyboard)
+    return MAIN_MENU_NUM
 
 
-async def manage_main_menu(update: Update, context: CON_TYPE):
-    """Управление главным меню."""
-    user_choice = update.message.text
-    if user_choice == 'Статьи':
-        return await get_source_menu(update)
-    elif user_choice == 'Настройки':
-        return await get_settings_menu(update)
+async def start_over_manager(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+):
+    """Повторный возврат в главное меню без создания сообщения."""
+    context.user_data.clear()
+    query = update.callback_query
+    await query.answer()
+    await query.edit_message_text(MAIN_MENU_TXT, reply_markup=main_keyboard)
+    return MAIN_MENU_NUM
 
 
-async def manage_source_menu(update: Update, context: CON_TYPE):
+async def source_manager(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+):
     """Управление меню источников."""
-    user_choice = update.message.text
-    if user_choice == 'Назад':
-        return await get_main_menu(update)
-    context.user_data['source'] = user_choice
-    return await get_theme_menu(update)
+    query = update.callback_query
+    await query.answer()
+    await query.edit_message_text(
+        SOURCE_MENU_TXT, reply_markup=source_keyboard
+    )
+    return SOURCE_MENU_NUM
 
 
-async def manage_theme_menu(update: Update, context: CON_TYPE):
+async def theme_manager(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+):
     """Управление меню тем."""
-    user_choice = update.message.text
-    if user_choice == 'Назад':
-        return await get_source_menu(update)
-    context.user_data['theme'] = user_choice
-    source = context.user_data['source']
-    theme = context.user_data['theme']
-    text = f'Источник: {source}, Тема: {theme}'
-    await context.bot.send_message(update.effective_chat.id, text)
-    return await get_main_menu(update)
+    query = update.callback_query
+    source = query.data
+    context.user_data['source'] = source
+    await query.answer()
+    await query.edit_message_text(THEME_MENU_TXT, reply_markup=theme_keyboard)
+    return THEME_MENU_NUM
 
 
-async def manage_settings_menu(update: Update, context: CON_TYPE):
-    """Управление меню настроек."""
-    user_choice = update.message.text
+async def article_manager(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+):
+    """Получение статей и возврат главного меню."""
     chat_id = update.effective_chat.id
-    if user_choice == 'Назад':
-        return await get_main_menu(update)
-    await update_user_article_limit(chat_id, int(user_choice))
-    return await get_settings_menu(update)
+    query = update.callback_query
+    theme = query.data
+    source = context.user_data['source']
+    # await query.answer(f'Выбрано: {source} - {theme}')
+    await query.delete_message()
+    # здесь отправка статей:
+    # Сообщение о статьях: если есть, то сколько.
+    # Если нет, то сообщить, что таких нет.
+    msg_txt = f'Статьи из {source}'
+    if source == 'ВСЕ':
+        msg_txt = 'Статьи из всех источников'
+    if theme == 'ВСЕ':
+        msg_txt += ' по всем темам:'
+    else:
+        msg_txt += f' на тему {theme}:'
+    await context.bot.send_message(chat_id, msg_txt)
+    await context.bot.send_message(
+        chat_id,
+        MAIN_MENU_TXT,
+        reply_markup=main_keyboard
+    )
+    return MAIN_MENU_NUM
+
+
+async def settings_manager(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+):
+    """Управление меню настроек."""
+    query = update.callback_query
+    chat_id = update.effective_chat.id
+    article_limit = await get_user_article_limit(chat_id)
+    await query.answer()
+    await query.edit_message_text(
+        SETTINGS_MENU_TXT(article_limit),
+        reply_markup=settings_keyboard
+    )
+    return SETTINGS_MENU_NUM
+
+
+async def settings_update_manager(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+):
+    """Возврат в меню настроек после обновления изменения article_limit."""
+    query = update.callback_query
+    chat_id = update.effective_chat.id
+    new_limit = int(query.data)
+    await update_user_article_limit(chat_id, new_limit)
+    return await settings_manager(update, context)
 
 
 conv_handler = ConversationHandler(
-    entry_points=[CommandHandler('start', start)],
+    entry_points=[CommandHandler('start', start_manager)],
     states={
-        MAIN_MENU: [
-            MessageHandler(filters.Text(MAIN_KEYBOARD[0]), manage_main_menu),
-        ],
-        SOURCE_MENU: [
-            MessageHandler(
-                filters.Text(SOURCE_KEYBOARD[0] + SOURCE_KEYBOARD[1]),
-                manage_source_menu
+        MAIN_MENU_NUM: [
+            CallbackQueryHandler(
+                source_manager,
+                pattern=pattern(SOURCE_MENU_NUM)
+            ),
+            CallbackQueryHandler(
+                settings_manager,
+                pattern=pattern(SETTINGS_MENU_NUM)
             ),
         ],
-        THEME_MENU: [
-            MessageHandler(
-                filters.Text(THEME_KEYBOARD[0] + THEME_KEYBOARD[1]),
-                manage_theme_menu
+        SOURCE_MENU_NUM: [
+            CallbackQueryHandler(
+                start_over_manager,
+                pattern=pattern(MAIN_MENU_NUM)
             ),
+            CallbackQueryHandler(theme_manager),
         ],
-        SETTINGS_MENU: [
-            MessageHandler(
-                filters.Text(SETTINGS_KEYBOARD[0] + SETTINGS_KEYBOARD[1]),
-                manage_settings_menu
+        THEME_MENU_NUM: [
+            CallbackQueryHandler(
+                source_manager,
+                pattern=pattern(SOURCE_MENU_NUM)
             ),
+            CallbackQueryHandler(article_manager),
+        ],
+        SETTINGS_MENU_NUM: [
+            CallbackQueryHandler(
+                start_over_manager,
+                pattern=pattern(MAIN_MENU_NUM)
+            ),
+            CallbackQueryHandler(settings_update_manager),
         ],
     },
-    fallbacks=[CommandHandler('fallback', get_main_menu)],
+    fallbacks=[CommandHandler('start', start_over_manager)],
 )

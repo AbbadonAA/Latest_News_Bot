@@ -108,9 +108,9 @@ async def get_articles_from_db(
 ) -> list[Article]:
     """Получение списка статей."""
     stmt = select(Article).options(selectinload(Article.readers))
-    if source:
+    if source and source != 'ВСЕ':
         stmt = stmt.where(Article.source == source)
-    if category_filter:
+    if category_filter and category_filter != 'ВСЕ':
         stmt = stmt.where(Article.category == category_filter)
     # Исключение статей, которые пользователь уже читал.
     stmt = stmt.filter(~Article.readers.contains(user))

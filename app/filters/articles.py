@@ -7,9 +7,11 @@ class ThemeFilter(str, Enum):
     ECONOMY = 'Экономика'
     SPORT = 'Спорт'
     SOCIETY = 'Общество'
+    ALL = 'ВСЕ'
 
 
 class SourceFilter(str, Enum):
     """Доступные фильтры при выборе источников."""
     RBC = 'РБК'
     INOSMI = 'ИноСМИ'
+    ALL = 'ВСЕ'
