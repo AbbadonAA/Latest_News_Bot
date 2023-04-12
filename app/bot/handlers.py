@@ -68,8 +68,6 @@ async def article_manager(
     source = context.user_data['source']
     # await query.answer(f'Выбрано: {source} - {category}')
     await query.delete_message()
-    # Сообщение о статьях: если есть, то сколько.
-    # Если нет, то сообщить, что таких нет.
     msg_txt = f'Статьи из {source}'
     if source == 'ВСЕ':
         msg_txt = 'Статьи из всех источников'
@@ -79,13 +77,25 @@ async def article_manager(
         msg_txt += f' на тему {category}:'
     await context.bot.send_message(chat_id, msg_txt)
     articles = await get_articles(chat_id, category, source)
+    # Если нет статей - сообщить об этом.
     for article in articles:
+        # Получаем данные статьи: id, title, picture, overview, category
+        id = article.id
         title = article.title
-        image = article.picture_link
-        if not image:
-            image = 'https://t-bike.ru/images/products/no-image.jpg'
-        await context.bot.send_photo(chat_id, image, caption=title)
-        # await context.bot.send_message(chat_id, title)
+        picture = article.picture_link
+        if not picture:
+            # Временная заглушка
+            picture = 'https://t-bike.ru/images/products/no-image.jpg'
+        overview = article.overview
+        if not overview:
+            overview = ''
+        article_cat = article.category
+        # Отправляем InlineKeyBoard:
+        # картинка (если есть, нет - заглушка), текст, кнопка читать:
+        # в тексте: title, overview (если есть), category
+        # в кнопке - url на нужный эндпоинт с указанием id статьи
+        # TODO: template, эндпоинт для получения html-страницы
+        await context.bot.send_photo(chat_id, picture, caption=title)
     await context.bot.send_message(
         chat_id,
         MAIN_MENU_TXT,
