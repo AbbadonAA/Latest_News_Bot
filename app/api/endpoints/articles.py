@@ -7,7 +7,7 @@ from ...core.db import get_session
 from ...core.user import current_superuser, current_user
 from ...crud.articles import (get_article_amount_from_db,
                               get_article_by_id_from_db, get_articles_from_db)
-from ...filters.articles import SourceFilter, ThemeFilter
+from ...filters.articles import CategoryFilter, SourceFilter
 from ...models import UserModel
 from ...schemas.articles import Article
 
@@ -27,7 +27,7 @@ async def get_articles(
     user: UserModel = Depends(current_user),
     session: AsyncSession = Depends(get_session),
     source: SourceFilter = None,
-    category_filter: ThemeFilter = None,
+    category_filter: CategoryFilter = None,
 ):
     """Получение статей с ограничением количества и фильтром категорий."""
     articles = (

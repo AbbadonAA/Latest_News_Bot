@@ -5,18 +5,18 @@ from telegram import Update
 from telegram.ext import (CommandHandler, ContextTypes, ConversationHandler,
                           MessageHandler, filters)
 
-from app.filters.articles import SourceFilter, ThemeFilter
+from app.filters.articles import CategoryFilter, SourceFilter
 
 from .jobs import (get_or_create_user, get_user_article_limit,
                    update_user_article_limit)
 
 CON_TYPE = ContextTypes.DEFAULT_TYPE
 
-MAIN_MENU, SOURCE_MENU, THEME_MENU, SETTINGS_MENU = range(4)
+MAIN_MENU, SOURCE_MENU, CATEGORY_MENU, SETTINGS_MENU = range(4)
 
 MAIN_KEYBOARD = [['Статьи', 'Настройки']]
 SOURCE_KEYBOARD = [[s.value for s in SourceFilter], ['Назад']]
-THEME_KEYBOARD = [[t.value for t in ThemeFilter], ['Назад']]
+CATEGORY_KEYBOARD = [[c.value for c in CategoryFilter], ['Назад']]
 SETTINGS_KEYBOARD = [[str(lt) for lt in range(1, 11)], ['Назад']]
 
 
@@ -64,11 +64,11 @@ async def get_source_menu(update: Update):
     return await reply_with_keyboard(update, text, keyboard, menu)
 
 
-async def get_theme_menu(update: Update):
-    """Вызов меню тем."""
+async def get_category_menu(update: Update):
+    """Вызов меню тем / категорий."""
     text = 'Выберите тему:'
-    keyboard = THEME_KEYBOARD
-    menu = THEME_MENU
+    keyboard = CATEGORY_KEYBOARD
+    menu = CATEGORY_MENU
     return await reply_with_keyboard(update, text, keyboard, menu)
 
 
@@ -94,18 +94,18 @@ async def manage_source_menu(update: Update, context: CON_TYPE):
     if user_choice == 'Назад':
         return await get_main_menu(update)
     context.user_data['source'] = user_choice
-    return await get_theme_menu(update)
+    return await get_category_menu(update)
 
 
-async def manage_theme_menu(update: Update, context: CON_TYPE):
+async def manage_category_menu(update: Update, context: CON_TYPE):
     """Управление меню тем."""
     user_choice = update.message.text
     if user_choice == 'Назад':
         return await get_source_menu(update)
-    context.user_data['theme'] = user_choice
+    context.user_data['category'] = user_choice
     source = context.user_data['source']
-    theme = context.user_data['theme']
-    text = f'Источник: {source}, Тема: {theme}'
+    category = context.user_data['category']
+    text = f'Источник: {source}, Тема: {category}'
     await context.bot.send_message(update.effective_chat.id, text)
     return await get_main_menu(update)
 
@@ -132,10 +132,10 @@ conv_handler = ConversationHandler(
                 manage_source_menu
             ),
         ],
-        THEME_MENU: [
+        CATEGORY_MENU: [
             MessageHandler(
-                filters.Text(THEME_KEYBOARD[0] + THEME_KEYBOARD[1]),
-                manage_theme_menu
+                filters.Text(CATEGORY_KEYBOARD[0] + CATEGORY_KEYBOARD[1]),
+                manage_category_menu
             ),
         ],
         SETTINGS_MENU: [

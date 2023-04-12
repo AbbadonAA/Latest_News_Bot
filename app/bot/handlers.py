@@ -2,12 +2,12 @@ from telegram import Update
 from telegram.ext import (CallbackQueryHandler, CommandHandler, ContextTypes,
                           ConversationHandler)
 
-from .jobs import (get_or_create_user, get_user_article_limit,
+from .jobs import (get_articles, get_or_create_user, get_user_article_limit,
                    update_user_article_limit)
-from .menu import (MAIN_MENU_NUM, MAIN_MENU_TXT, SETTINGS_MENU_NUM,
-                   SETTINGS_MENU_TXT, SOURCE_MENU_NUM, SOURCE_MENU_TXT,
-                   THEME_MENU_NUM, THEME_MENU_TXT, main_keyboard, pattern,
-                   settings_keyboard, source_keyboard, theme_keyboard)
+from .menu import (CATEGORY_MENU_NUM, CATEGORY_MENU_TXT, MAIN_MENU_NUM,
+                   MAIN_MENU_TXT, SETTINGS_MENU_NUM, SETTINGS_MENU_TXT,
+                   SOURCE_MENU_NUM, SOURCE_MENU_TXT, category_keyboard,
+                   main_keyboard, pattern, settings_keyboard, source_keyboard)
 
 
 async def start_manager(
@@ -43,7 +43,7 @@ async def source_manager(
     return SOURCE_MENU_NUM
 
 
-async def theme_manager(
+async def category_manager(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ):
     """Управление меню тем."""
@@ -51,8 +51,11 @@ async def theme_manager(
     source = query.data
     context.user_data['source'] = source
     await query.answer()
-    await query.edit_message_text(THEME_MENU_TXT, reply_markup=theme_keyboard)
-    return THEME_MENU_NUM
+    await query.edit_message_text(
+        CATEGORY_MENU_TXT,
+        reply_markup=category_keyboard
+    )
+    return CATEGORY_MENU_NUM
 
 
 async def article_manager(
@@ -61,21 +64,28 @@ async def article_manager(
     """Получение статей и возврат главного меню."""
     chat_id = update.effective_chat.id
     query = update.callback_query
-    theme = query.data
+    category = query.data
     source = context.user_data['source']
-    # await query.answer(f'Выбрано: {source} - {theme}')
+    # await query.answer(f'Выбрано: {source} - {category}')
     await query.delete_message()
-    # здесь отправка статей:
     # Сообщение о статьях: если есть, то сколько.
     # Если нет, то сообщить, что таких нет.
     msg_txt = f'Статьи из {source}'
     if source == 'ВСЕ':
         msg_txt = 'Статьи из всех источников'
-    if theme == 'ВСЕ':
+    if category == 'ВСЕ':
         msg_txt += ' по всем темам:'
     else:
-        msg_txt += f' на тему {theme}:'
+        msg_txt += f' на тему {category}:'
     await context.bot.send_message(chat_id, msg_txt)
+    articles = await get_articles(chat_id, category, source)
+    for article in articles:
+        title = article.title
+        image = article.picture_link
+        if not image:
+            image = 'https://t-bike.ru/images/products/no-image.jpg'
+        await context.bot.send_photo(chat_id, image, caption=title)
+        # await context.bot.send_message(chat_id, title)
     await context.bot.send_message(
         chat_id,
         MAIN_MENU_TXT,
@@ -128,9 +138,9 @@ conv_handler = ConversationHandler(
                 start_over_manager,
                 pattern=pattern(MAIN_MENU_NUM)
             ),
-            CallbackQueryHandler(theme_manager),
+            CallbackQueryHandler(category_manager),
         ],
-        THEME_MENU_NUM: [
+        CATEGORY_MENU_NUM: [
             CallbackQueryHandler(
                 source_manager,
                 pattern=pattern(SOURCE_MENU_NUM)

@@ -1,4 +1,5 @@
 from app.core.db import get_session
+from app.crud.articles import get_articles_from_db
 from app.crud.user import (create_user, get_user_article_limit_from_db,
                            get_user_by_chat_id_from_db,
                            update_user_article_limit_db)
@@ -36,3 +37,12 @@ async def update_user_article_limit(chat_id: int, article_limit: int):
             )
         )
     return article_limit
+
+
+async def get_articles(chat_id: int, category: str, source: str):
+    """Получение статей."""
+    user = await get_or_create_user(chat_id)
+    sessions = get_session()
+    async for session in sessions:
+        articles = await get_articles_from_db(user, session, category, source)
+    return articles
