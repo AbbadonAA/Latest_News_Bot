@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     app_title: str = 'LATEST NEWS PARSER'
     app_description: str = (
         'API для запуска парсеров и получения новостных статей')
+    HOST: str
+    PORT: int
     # настройки БД:
     POSTGRES_DB: str
     POSTGRES_USER: str

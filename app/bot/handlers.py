@@ -3,7 +3,8 @@ from telegram.ext import (CallbackQueryHandler, CommandHandler, ContextTypes,
                           ConversationHandler)
 
 from .jobs import (get_articles, get_or_create_user, get_user_article_limit,
-                   update_user_article_limit)
+                   send_article, send_article_set_description,
+                   send_not_found_msg, update_user_article_limit)
 from .menu import (CATEGORY_MENU_NUM, CATEGORY_MENU_TXT, MAIN_MENU_NUM,
                    MAIN_MENU_TXT, SETTINGS_MENU_NUM, SETTINGS_MENU_TXT,
                    SOURCE_MENU_NUM, SOURCE_MENU_TXT, category_keyboard,
@@ -68,34 +69,13 @@ async def article_manager(
     source = context.user_data['source']
     # await query.answer(f'Выбрано: {source} - {category}')
     await query.delete_message()
-    msg_txt = f'Статьи из {source}'
-    if source == 'ВСЕ':
-        msg_txt = 'Статьи из всех источников'
-    if category == 'ВСЕ':
-        msg_txt += ' по всем темам:'
-    else:
-        msg_txt += f' на тему {category}:'
-    await context.bot.send_message(chat_id, msg_txt)
+    await send_article_set_description(chat_id, source, category, context)
     articles = await get_articles(chat_id, category, source)
-    # Если нет статей - сообщить об этом.
+    if not articles:
+        await send_not_found_msg(chat_id, context)
     for article in articles:
-        # Получаем данные статьи: id, title, picture, overview, category
-        id = article.id
-        title = article.title
-        picture = article.picture_link
-        if not picture:
-            # Временная заглушка
-            picture = 'https://t-bike.ru/images/products/no-image.jpg'
-        overview = article.overview
-        if not overview:
-            overview = ''
-        article_cat = article.category
-        # Отправляем InlineKeyBoard:
-        # картинка (если есть, нет - заглушка), текст, кнопка читать:
-        # в тексте: title, overview (если есть), category
-        # в кнопке - url на нужный эндпоинт с указанием id статьи
+        await send_article(article, chat_id, context)
         # TODO: template, эндпоинт для получения html-страницы
-        await context.bot.send_photo(chat_id, picture, caption=title)
     await context.bot.send_message(
         chat_id,
         MAIN_MENU_TXT,
@@ -114,7 +94,8 @@ async def settings_manager(
     await query.answer()
     await query.edit_message_text(
         SETTINGS_MENU_TXT(article_limit),
-        reply_markup=settings_keyboard
+        reply_markup=settings_keyboard,
+        parse_mode='HTML'
     )
     return SETTINGS_MENU_NUM
 
