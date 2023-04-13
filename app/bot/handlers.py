@@ -67,7 +67,6 @@ async def article_manager(
     query = update.callback_query
     category = query.data
     source = context.user_data['source']
-    # await query.answer(f'Выбрано: {source} - {category}')
     await query.delete_message()
     await send_article_set_description(chat_id, source, category, context)
     articles = await get_articles(chat_id, category, source)
@@ -75,7 +74,6 @@ async def article_manager(
         await send_not_found_msg(chat_id, context)
     for article in articles:
         await send_article(article, chat_id, context)
-        # TODO: template, эндпоинт для получения html-страницы
     await context.bot.send_message(
         chat_id,
         MAIN_MENU_TXT,
