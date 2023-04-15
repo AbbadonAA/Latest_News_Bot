@@ -49,6 +49,7 @@
 APP_TITLE=  # название приложения
 HOST=  # IP-адрес
 PORT=  # порт
+DOMAIN=  # доменное имя
 POSTGRES_DB=  # название БД
 POSTGRES_USER=  # имя пользователя БД
 POSTGRES_PASSWORD=  # пароль БД
