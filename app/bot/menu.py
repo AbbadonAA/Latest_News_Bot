@@ -38,6 +38,8 @@ def keyboard_constructor(
 def article_keyboard(article_id: int):
     """Клавиатура для сообщения с новостной статьей."""
     url = f'http://{settings.HOST}:{settings.PORT}/articles/html/{article_id}'
+    # После получения доменного имени и SSL - заменить на:
+    # url = f'https://{settings.DOMAIN}/articles/html/{article_id}'
     keyboard = keyboard_constructor({'Читать далее': None}, url=url)
     return keyboard
 

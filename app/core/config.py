@@ -14,6 +14,7 @@ class Settings(BaseSettings):
         'API для запуска парсеров и получения новостных статей')
     HOST: str
     PORT: int
+    DOMAIN: str
     # настройки БД:
     POSTGRES_DB: str
     POSTGRES_USER: str

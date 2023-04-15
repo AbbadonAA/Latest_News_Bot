@@ -68,6 +68,7 @@ async def get_article_html(
     request: Request,
     session: AsyncSession = Depends(get_session),
 ):
+    """Получение статьи в формате html."""
     article = await get_article_by_id_from_db(session, article_id)
     if not article:
         raise HTTPException(
