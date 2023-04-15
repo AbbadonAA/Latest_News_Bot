@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <header>
+        {% if date %}
+        <time datetime="{{ date.isoformat() }}">{{ date.strftime("%d.%m.%Y") }}</time>
+        {% endif %}
+        {% if category %}
+        <p>Категория: {{ category }}</p>
+        {% endif %}
+    </header>
+
+    <article>
+        <h1>{{ title }}</h1>
+
+        {% if picture %}
+        <figure>
+            <img src="{{ picture }}" alt="{{ title }}">
+        </figure>
+        {% endif %}
+
+        {% if overview %}
+        <p>{{ overview }}</p>
+        {% endif %}
+
+        {% if text %}
+        <div>
+            {% for paragraph in text %}
+            <p>{{ paragraph }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if infographics %}
+        <section>
+            <h2>Материалы статьи</h2>
+            {% for infographic in infographics %}
+            <figure>
+                <img src="{{ infographic }}" alt="Материалы">
+            </figure>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        {% if video %}
+        <section>
+            <h2>Видео</h2>
+            <iframe width="560" height="315" src="{{ video }}" frameborder="0" allowfullscreen></iframe>
+        </section>
+        {% endif %}
+    </article>
+
+    <footer>
+        {% if authors %}
+        <p>Авторы:</p>
+        {% for author in authors %}
+        <p>{{ author }}</p>
+        {% endfor %}
+        {% endif %}
+
+        {% if source %}
+        <p>Источник: {{ source }}</p>
+        {% endif %}
+
+        {% if original_link %}
+        <p><a href="{{ original_link }}">Оригинал статьи</a></p>
+        {% endif %}
+
+    </footer>
+</body>
+</html>

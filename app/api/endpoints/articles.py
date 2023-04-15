@@ -1,6 +1,8 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.db import get_session
@@ -12,6 +14,7 @@ from ...models import UserModel
 from ...schemas.articles import Article
 
 router = APIRouter()
+templates = Jinja2Templates('app/api/templates')
 
 
 @router.get('/count', dependencies=[Depends(current_superuser)])
@@ -57,3 +60,36 @@ async def get_article_by_id(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Такой статьи нет в БД.')
     return article
+
+
+@router.get('/html/{article_id}', response_class=HTMLResponse)
+async def get_article_html(
+    article_id: int,
+    request: Request,
+    session: AsyncSession = Depends(get_session),
+):
+    article = await get_article_by_id_from_db(session, article_id)
+    if not article:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Такой статьи нет в БД.')
+    infographic_links = [
+        link.infographic_link for link in article.infographic_links
+    ]
+    authors = [author.author_name for author in article.authors]
+    data = {
+        "title": article.title,
+        "date": article.date,
+        "category": article.category,
+        "overview": article.overview,
+        "original_link": article.link,
+        "text": article.text.split('\n'),
+        "picture": article.picture_link,
+        "infographics": infographic_links,
+        "video": article.video_link,
+        "authors": authors,
+        "source": article.source
+    }
+    return templates.TemplateResponse(
+        "article.html", {"request": request, **data}
+    )
