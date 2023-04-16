@@ -110,7 +110,7 @@ BOT_TOKEN=  # токен бота Telegram
 [FastAPI-badge]: https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi
 
 [Scrapy-url]: https://pypi.org/project/Scrapy/
-[Scrapy-badge]: https://img.shields.io/badge/-Scrapy-green?style=for-the-badge&
+[Scrapy-badge]: https://img.shields.io/badge/-Scrapy-forestgreen?style=for-the-badge&
 
 [Python-telegram-bot-url]: https://github.com/python-telegram-bot/python-telegram-bot
 [Python-telegram-bot-badge]: https://img.shields.io/badge/python--telegram--bot-2CA5E0?style=for-the-badge
