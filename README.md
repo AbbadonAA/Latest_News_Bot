@@ -22,11 +22,14 @@
  - CI/CD (GitHub Actions + Docker-Compose).
   
  ## Ключевые технологии и библиотеки: 
+ [![FastAPI][FastAPI-badge]][FastAPI-url]
+ [![Python-telegram-bot][Python-telegram-bot-badge]][Python-telegram-bot-url]
+ [![Postgres][Postgres-badge]][Postgres-url]
  - [Python](https://www.python.org/); 
- - [FastAPI](https://fastapi.tiangolo.com/);
+ <!-- - [FastAPI](https://fastapi.tiangolo.com/); -->
  - [Scrapy](https://pypi.org/project/Scrapy/);
- - [Python-Telegram-Bot](https://pypi.org/project/python-telegram-bot/);
- - [PostgreSQL](https://www.postgresql.org/);
+ <!-- - [Python-Telegram-Bot](https://pypi.org/project/python-telegram-bot/); -->
+ <!-- - [PostgreSQL](https://www.postgresql.org/); -->
  - [SQLAlchemy](https://pypi.org/project/SQLAlchemy/); 
  - [Alembic](https://pypi.org/project/alembic/); 
  - [Pydantic](https://pypi.org/project/pydantic/); 
@@ -103,3 +106,14 @@ BOT_TOKEN=  # токен бота Telegram
  Pushkarev Anton 
   
  pushkarevantona@gmail.com
+
+ <!-- MARKDOWN LINKS & BADGES -->
+
+[FastAPI-url]: https://fastapi.tiangolo.com/
+[FastAPI-badge]: https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi
+
+[Python-telegram-bot-url]: https://github.com/python-telegram-bot/python-telegram-bot
+[Python-telegram-bot-badge]: https://img.shields.io/badge/python--telegram--bot-2CA5E0?style=for-the-badge
+
+[Postgres-url]: https://www.postgresql.org/
+[Postgres-badge]: https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white
