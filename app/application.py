@@ -8,8 +8,8 @@ from app.core.init_db import create_first_superuser
 
 def create_app() -> FastAPI:
     app = FastAPI(
-        title=settings.app_title,
-        description=settings.app_description
+        title=settings.APP_TITLE,
+        description=settings.APP_DESCRIPTION
     )
     app.include_router(main_router)
 

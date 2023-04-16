@@ -4,12 +4,12 @@ from app.crud.user import create_user
 
 
 async def create_first_superuser():
-    if (settings.first_superuser_email is not None
-        and settings.first_superuser_password is not None
-            and settings.first_superuser_chat_id is not None):
+    if (settings.FIRST_SUPERUSER_EMAIL is not None
+        and settings.FIRST_SUPERUSER_PASSWORD is not None
+            and settings.FIRST_SUPERUSER_CHAT_ID is not None):
         await create_user(
-            email=settings.first_superuser_email,
-            password=settings.first_superuser_password,
-            chat_id=settings.first_superuser_chat_id,
+            email=settings.FIRST_SUPERUSER_EMAIL,
+            password=settings.FIRST_SUPERUSER_PASSWORD,
+            chat_id=settings.FIRST_SUPERUSER_CHAT_ID,
             is_superuser=True,
         )

@@ -35,11 +35,11 @@ def keyboard_constructor(
     return InlineKeyboardMarkup(keyboard)
 
 
-def article_keyboard(article_id: int):
+def article_keyboard(article_id: int, domain: bool = settings.DOMAIN):
     """Клавиатура для сообщения с новостной статьей."""
     url = f'http://{settings.HOST}:{settings.PORT}/articles/html/{article_id}'
-    # После получения доменного имени и SSL - заменить на:
-    # url = f'https://{settings.DOMAIN}/articles/html/{article_id}'
+    if domain:
+        url = f'https://{settings.DOMAIN_NAME}/articles/html/{article_id}'
     keyboard = keyboard_constructor({'Читать далее': None}, url=url)
     return keyboard
 

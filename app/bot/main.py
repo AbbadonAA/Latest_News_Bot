@@ -13,7 +13,7 @@ from .handlers import conv_handler
 
 def create_bot() -> Application:
     """Создание бота."""
-    bot_instance = ApplicationBuilder().token(settings.bot_token).build()
+    bot_instance = ApplicationBuilder().token(settings.BOT_TOKEN).build()
     bot_instance.add_handler(conv_handler)
     return bot_instance
 

@@ -9,12 +9,13 @@ load_dotenv()
 class Settings(BaseSettings):
     """Настройки проекта."""
     # настройки приложения:
-    app_title: str = 'LATEST NEWS PARSER'
-    app_description: str = (
+    APP_TITLE: str = 'LATEST NEWS PARSER'
+    APP_DESCRIPTION: str = (
         'API для запуска парсеров и получения новостных статей')
     HOST: str
     PORT: int
-    DOMAIN: str
+    DOMAIN: bool
+    DOMAIN_NAME: str
     # настройки БД:
     POSTGRES_DB: str
     POSTGRES_USER: str
@@ -22,15 +23,15 @@ class Settings(BaseSettings):
     DB_HOST: str
     DB_PORT: str
     # хеширование токенов:
-    secret: str = 'SECRET'
+    SECRET: str = 'SECRET'
     # бизнес-логика:
     DAYS: int
     # первый суперпользователь:
-    first_superuser_email: Optional[EmailStr] = None
-    first_superuser_password: Optional[str] = None
-    first_superuser_chat_id: Optional[int] = None
+    FIRST_SUPERUSER_EMAIL: Optional[EmailStr] = None
+    FIRST_SUPERUSER_PASSWORD: Optional[str] = None
+    FIRST_SUPERUSER_CHAT_ID: Optional[int] = None
     # данные бота:
-    bot_token: str
+    BOT_TOKEN: str
 
     @property
     def database_url(self) -> str:
