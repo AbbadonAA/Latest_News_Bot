@@ -49,7 +49,8 @@
 APP_TITLE=  # название приложения
 HOST=  # IP-адрес
 PORT=  # порт
-DOMAIN=  # доменное имя
+DOMAIN=False  # имеется ли доменное имя
+DOMAIN_NAME=  # доменное имя (необходим сертификат SSL)
 POSTGRES_DB=  # название БД
 POSTGRES_USER=  # имя пользователя БД
 POSTGRES_PASSWORD=  # пароль БД
