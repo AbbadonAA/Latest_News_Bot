@@ -119,7 +119,7 @@ BOT_TOKEN=  # токен бота Telegram
 [Postgres-badge]: https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white
 
 [SQLAlchemy-url]: https://pypi.org/project/SQLAlchemy/
-[SQLAlchemy-badge]: https://img.shields.io/badge/-SQLAlchemy-lightgrey?style=for-the-badge&
+[SQLAlchemy-badge]: https://img.shields.io/badge/-SQLAlchemy-dimgrey?style=for-the-badge&
 
 [Docker-url]: https://www.docker.com/
 [Docker-badge]: https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white
