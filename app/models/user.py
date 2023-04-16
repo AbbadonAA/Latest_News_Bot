@@ -7,5 +7,5 @@ from app.core.db import Base
 
 class UserModel(SQLAlchemyBaseUserTable[int], Base):
     """Модель для пользователей."""
-    chat_id = mapped_column(Integer, nullable=False, index=True, unique=True)
+    chat_id = mapped_column(Integer, nullable=True, index=True, unique=True)
     article_limit = mapped_column(Integer, nullable=False, default=5)

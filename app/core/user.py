@@ -34,7 +34,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[UserModel, int]):
     async def on_after_register(
         self, user: UserModel, request: Optional[Request] = None
     ):
-        print(f'Пользователь {user.chat_id} зарегистрирован.')
+        print(f'Пользователь {user.email} зарегистрирован.')
 
 
 async def get_user_manager(user_db=Depends(get_user_db)):

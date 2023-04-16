@@ -6,13 +6,13 @@ from pydantic import validator
 
 class UserRead(schemas.BaseUser[int]):
     """Схема - получение данных пользователя."""
-    chat_id: int
+    chat_id: Optional[int]
     article_limit: int
 
 
 class UserCreate(schemas.BaseUserCreate):
     """Схема - создание пользователя."""
-    chat_id: int
+    chat_id: Optional[int]
     article_limit: int = 5
 
     @validator('article_limit')

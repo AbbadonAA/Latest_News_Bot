@@ -19,7 +19,7 @@ get_user_manager_context = contextlib.asynccontextmanager(get_user_manager)
 async def create_user(
         email: EmailStr,
         password: str,
-        chat_id: int,
+        chat_id: int = None,
         is_superuser: bool = False
 ):
     """Создание пользователя."""
