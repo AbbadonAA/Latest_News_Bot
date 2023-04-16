@@ -43,22 +43,25 @@
  ``` 
  3. Создайте в корневой директории файл .env со следующим наполнением: 
  ```dotenv
+# Переменные приложения
 APP_TITLE=  # название приложения
 HOST=  # IP-адрес
 PORT=  # порт
 DOMAIN=False  # имеется ли доменное имя
 DOMAIN_NAME=  # доменное имя (необходим сертификат SSL)
-POSTGRES_DB=  # название БД
-POSTGRES_USER=  # имя пользователя БД
-POSTGRES_PASSWORD=  # пароль БД
-DB_HOST=  # хост БД
-DB_PORT=  # порт БД
 DAYS=5  # срок хранения данных в БД
 SECRET=  # любая последовательность символов для хеширования
 FIRST_SUPERUSER_EMAIL=  # email первого суперпользователя
 FIRST_SUPERUSER_PASSWORD=  # пароль суперпользователя
 FIRST_SUPERUSER_CHAT_ID=  # chat_id суперпользователя
 BOT_TOKEN=  # токен бота Telegram
+
+# Переменные базы данных
+POSTGRES_DB=  # название БД
+POSTGRES_USER=  # имя пользователя БД
+POSTGRES_PASSWORD=  # пароль БД
+DB_HOST=  # хост БД
+DB_PORT=  # порт БД
  ``` 
  4. Запустите контейнер с базой данных PostgreSQL (должен быть установлен Docker): 
  ```shell
