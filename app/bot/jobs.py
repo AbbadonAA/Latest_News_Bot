@@ -8,6 +8,7 @@ from app.crud.user import (create_user, get_user_article_limit_from_db,
 from app.models.articles import Article
 
 from .menu import article_keyboard
+from app.filters.articles import SourceFilter, CategoryFilter
 
 
 async def get_or_create_user(chat_id: int):
@@ -73,7 +74,8 @@ async def send_article(
     msg_text = (
         f'<b>{title}</b>\n\n'
         f'{overview}'
-        f'<i>Категория: {category}</i>'
+        f'<i>Категория: {category}</i>\n'
+        f'<i>Источник: {article.source}</i>'
     )
     keyboard = article_keyboard(article.id)
     await context.bot.send_photo(
@@ -92,9 +94,9 @@ async def send_article_set_description(
     context: ContextTypes.DEFAULT_TYPE
 ):
     msg_txt = f'Статьи из {source}'
-    if source == 'ВСЕ':
+    if source == SourceFilter.ALL:
         msg_txt = 'Статьи из всех источников'
-    if category == 'ВСЕ':
+    if category == CategoryFilter.ALL:
         msg_txt += ' по всем темам:'
     else:
         msg_txt += f' на тему {category}:'
