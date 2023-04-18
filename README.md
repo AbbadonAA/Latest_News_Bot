@@ -29,6 +29,7 @@
  [![Postgres][Postgres-badge]][Postgres-url]
  [![SQLAlchemy][SQLAlchemy-badge]][SQLAlchemy-url]
  [![Docker][Docker-badge]][Docker-url]
+ [![Nginx][Nginx-badge]][Nginx-url]
 
  ## Установка для локального запуска
  1. Склонируйте репозиторий: 
@@ -43,16 +44,19 @@
  ``` 
  3. Создайте в корневой директории файл .env со следующим наполнением: 
  ```dotenv
-# Переменные приложения
+# Переменные API
 APP_TITLE=  # название приложения
-HOST=  # IP-адрес
-PORT=  # порт
-DOMAIN=False  # имеется ли доменное имя
-DOMAIN_NAME=  # доменное имя (необходим сертификат SSL)
+HOST=0.0.0.0  # хост
+PORT=8080  # порт
+DOMAIN=False  # имеется ли DOMAIN_NAME
+DOMAIN_NAME=example.com  # пример при наличии (необходим сертификат SSL)
 DAYS=5  # срок хранения данных в БД
 SECRET=  # любая последовательность символов для хеширования
 FIRST_SUPERUSER_EMAIL=  # email первого суперпользователя
 FIRST_SUPERUSER_PASSWORD=  # пароль суперпользователя
+
+# Перменные бота
+WEBHOOK=False # True для запуска бота в режиме webhook
 BOT_TOKEN=  # токен бота Telegram
 
 # Переменные базы данных
@@ -62,17 +66,46 @@ POSTGRES_PASSWORD=  # пароль БД
 DB_HOST=  # хост БД
 DB_PORT=  # порт БД
  ``` 
+
+> **Warning**:
+> Для локального запуска рекомендуется не указывать домен (DOMAIN=False) и запускать бота в режиме polling (WEBHOOK=False). В случае запуска бота в режиме webhook требуется наличие доменного имени с установленным сертификатом SSL. Иначе потребуется Ngrok.
+
+<details>
+<summary><b><i>Использование Ngrok</i></b></summary>
+
+В случае отсутствия доменного имени с
+установленным SSL-сертификатом для запуска бота в режиме webhook можно использовать Ngrok. Этот инструмент позволяет создавать временный
+общедоступный адрес (туннель) локального сервера,
+находящимся за NAT или брандмауэром.
+
+Подробнее: https://ngrok.com/
+
+1. Установите Ngrok, следуя официальным инструкциям:
+
+    https://ngrok.com/download
+
+2. Запустите Ngrok и введите команду:
+    ```shell
+    ngrok http 80
+    ```
+3. Задайте значение переменной окружения (.env):
+    ```dotenv
+    DOMAIN_NAME=1234-56-78-9.eu.ngrok.io  # Пример
+    ```
+</details>
+
  4. Запустите контейнер с базой данных PostgreSQL (должен быть установлен Docker): 
  ```shell
  cd infra/
- docker-compose up -d 
+ docker-compose up -d db
  ``` 
  5. В корневой директории примените миграции для создания таблиц в БД: 
  ```shell
  alembic upgrade head 
  ``` 
  6. Проект готов к запуску. 
-  
+
+
  ## Управление при локальном запуске: 
  В корневой директории выполните команду: 
  ```shell
@@ -80,7 +113,7 @@ DB_PORT=  # порт БД
  ``` 
  Сервис будет запущен и доступен по следующим адресам:
 
- *(при условии, что в файле .env: HOST=127.0.0.1, PORT=8080)*
+ *(при условии, что в файле .env: HOST=0.0.0.0, PORT=8080)*
  - http://127.0.0.1:8080 - API 
  - http://127.0.0.1:8080/docs - документация Swagger
  - http://127.0.0.1:8080/redoc - документация ReDoc 
@@ -125,3 +158,6 @@ DB_PORT=  # порт БД
 
 [Docker-url]: https://www.docker.com/
 [Docker-badge]: https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white
+
+[Nginx-url]: https://nginx.org
+[Nginx-badge]: https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white~~
