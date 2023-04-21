@@ -51,7 +51,7 @@ PORT=8080  # порт
 DOMAIN=False  # имеется ли DOMAIN_NAME
 DOMAIN_NAME=example.com  # пример при наличии (необходим сертификат SSL)
 DAYS=5  # срок хранения данных в БД
-SECRET=  # любая последовательность символов для хеширования
+SECRET=539e2390-9cc3-4bc7-aec1-2e96471ba49f  # для хеширования
 FIRST_SUPERUSER_EMAIL=  # email первого суперпользователя
 FIRST_SUPERUSER_PASSWORD=  # пароль суперпользователя
 
@@ -86,7 +86,7 @@ Ngrok позволяет создавать временный
 
   - Запустите Ngrok и введите команду:
       ```shell
-      ngrok http 80
+      ngrok http 8000
       ```
   - Задайте значение переменной окружения (.env):
       ```dotenv
