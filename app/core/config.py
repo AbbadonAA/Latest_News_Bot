@@ -1,4 +1,6 @@
+import uuid
 from typing import Optional
+from urllib.parse import urljoin
 
 from dotenv import load_dotenv
 from pydantic import BaseSettings, EmailStr
@@ -23,7 +25,7 @@ class Settings(BaseSettings):
     DB_HOST: str
     DB_PORT: str
     # хеширование токенов:
-    SECRET: str = 'SECRET'
+    SECRET: str = str(uuid.uuid4())
     # бизнес-логика:
     DAYS: int
     # первый суперпользователь:
@@ -42,6 +44,11 @@ class Settings(BaseSettings):
             f'{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}'
             f'@{self.DB_HOST}:{self.DB_PORT}/{self.POSTGRES_DB}'
         )
+
+    @property
+    def telegram_webhook_url(self) -> str:
+        """Получить ссылку на эндпоинт для работы бота в режиме webhook."""
+        return urljoin(self.DOMAIN_NAME, "telegram/webhook")
 
     class Config:
         env_file = '.env'

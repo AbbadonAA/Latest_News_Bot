@@ -5,10 +5,10 @@ from app.crud.articles import get_articles_from_db
 from app.crud.user import (create_user, get_user_article_limit_from_db,
                            get_user_by_chat_id_from_db,
                            update_user_article_limit_db)
+from app.filters.articles import CategoryFilter, SourceFilter
 from app.models.articles import Article
 
 from .menu import article_keyboard
-from app.filters.articles import SourceFilter, CategoryFilter
 
 
 async def get_or_create_user(chat_id: int):

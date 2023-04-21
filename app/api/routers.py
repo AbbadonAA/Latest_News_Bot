@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
-from app.api.endpoints import article_router, db_router, user_router
+from app.api.endpoints import (article_router, db_router, telegram_router,
+                               user_router)
 
 main_router = APIRouter()
 main_router.include_router(
@@ -15,4 +16,9 @@ main_router.include_router(
 )
 main_router.include_router(
     user_router
+)
+main_router.include_router(
+    telegram_router,
+    prefix='/telegram',
+    tags=['Telegram webhook']
 )

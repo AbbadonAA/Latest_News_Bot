@@ -25,9 +25,9 @@ def create_app() -> FastAPI:
     async def on_shutdown():
         """Действия при остановке сервера."""
         bot_instance = app.state.bot_instance
-        await bot_instance.updater.stop()
-        # Для webhook:
-        # await bot_instance.stop()
-        # await bot_instance.shutdown()
+        if not settings.WEBHOOK:
+            await bot_instance.updater.stop()
+        await bot_instance.stop()
+        await bot_instance.shutdown()
 
     return app

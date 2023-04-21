@@ -18,10 +18,17 @@ def create_bot() -> Application:
     return bot_instance
 
 
-async def start_bot() -> Application:
+async def start_bot(webhook_mode: bool = settings.WEBHOOK) -> Application:
     """Запуск бота."""
     bot_instance = create_bot()
     await bot_instance.initialize()
-    await bot_instance.updater.start_polling()
+    if webhook_mode:
+        bot_instance.updater = None
+        await bot_instance.bot.set_webhook(
+            url=settings.telegram_webhook_url,
+            secret_token=settings.SECRET
+        )
+    else:
+        await bot_instance.updater.start_polling()
     await bot_instance.start()
     return bot_instance
