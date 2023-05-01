@@ -37,7 +37,7 @@ def keyboard_constructor(
 
 def article_keyboard(article_id: int, domain: bool = settings.DOMAIN):
     """Клавиатура для сообщения с новостной статьей."""
-    url = f'http://{settings.HOST}:{settings.PORT}/articles/html/{article_id}'
+    url = f'http://{settings.IP}:{settings.PORT}/articles/html/{article_id}'
     if domain:
         url = f'{settings.DOMAIN_NAME}/articles/html/{article_id}'
     keyboard = keyboard_constructor({'Читать далее': None}, url=url)

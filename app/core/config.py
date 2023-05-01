@@ -33,6 +33,7 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER_PASSWORD: Optional[str] = None
     FIRST_SUPERUSER_CHAT_ID: Optional[int] = None
     # данные бота:
+    IP: str
     WEBHOOK: bool
     BOT_TOKEN: str
 
