@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 
-class ApplicationError:
+class ApplicationError(Exception):
     """Исключение для бизнес-логики приложения."""
     detail: str = "Неопознанная ошибка. Будет исправлена."
 
