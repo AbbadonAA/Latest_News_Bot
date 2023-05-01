@@ -45,27 +45,27 @@
  3. Создайте в корневой директории файл .env со следующим наполнением: 
  ```dotenv
 # Переменные API
-APP_TITLE=  # название приложения
+APP_TITLE=LATEST_NEWS_PARSER  # (пример) название приложения
 HOST=0.0.0.0  # хост
 PORT=8080  # порт
 DOMAIN=False  # имеется ли DOMAIN_NAME
 DOMAIN_NAME=example.com  # пример при наличии (необходим сертификат SSL)
 DAYS=5  # срок хранения данных в БД
-SECRET=539e2390-9cc3-4bc7-aec1-2e96471ba49f  # для хеширования
-FIRST_SUPERUSER_EMAIL=  # email первого суперпользователя
-FIRST_SUPERUSER_PASSWORD=  # пароль суперпользователя
+SECRET=539e2390-9cc3-4bc7-aec1-2e96471ba49f  # (пример) uuid для хеширования
+FIRST_SUPERUSER_EMAIL=admin@gmail.com  # (пример) email первого суперпользователя
+FIRST_SUPERUSER_PASSWORD=AdmiN_123456789  # (пример) пароль суперпользователя
 
 # Переменные бота
-IP=127.0.0.1  # для запуска в режиме polling (127.0.0.1 при локальном запуске или адрес сервера)
+IP=127.0.0.1  # (пример) адрес вашего сервера для запуска в режиме polling
 WEBHOOK=False # True для запуска бота в режиме webhook
-BOT_TOKEN=  # токен бота Telegram
+BOT_TOKEN=5157247582:ATFpZanqlutiNMJfvO6tiNUDPnBkFAmiVi4  # (пример) токен бота Telegram
 
 # Переменные базы данных
-POSTGRES_DB=  # название БД
-POSTGRES_USER=  # имя пользователя БД
-POSTGRES_PASSWORD=  # пароль БД
-DB_HOST=  # хост БД
-DB_PORT=  # порт БД
+POSTGRES_DB=news_db  # название БД
+POSTGRES_USER=postgres  # имя пользователя БД
+POSTGRES_PASSWORD=postgres  # пароль БД
+DB_HOST=localhost  # хост БД
+DB_PORT=7000  # порт БД
  ``` 
 
 > **Warning**:
