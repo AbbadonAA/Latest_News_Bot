@@ -132,3 +132,4 @@ dmypy.json
 # data-files
 *.json
 *.csv
+bot_persistence_file

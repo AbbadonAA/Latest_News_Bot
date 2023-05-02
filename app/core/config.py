@@ -1,11 +1,14 @@
 import uuid
 from typing import Optional
 from urllib.parse import urljoin
+from pathlib import Path
 
 from dotenv import load_dotenv
 from pydantic import BaseSettings, EmailStr
 
 load_dotenv()
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 class Settings(BaseSettings):
@@ -36,6 +39,8 @@ class Settings(BaseSettings):
     IP: str = '127.0.0.1'
     WEBHOOK: bool
     BOT_TOKEN: str
+    BOT_PERSISTENCE_FILE: str = str(
+        BASE_DIR / "app" / "bot" / "bot_persistence_file")
 
     @property
     def database_url(self) -> str:

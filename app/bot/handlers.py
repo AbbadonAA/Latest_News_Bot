@@ -145,4 +145,6 @@ conv_handler = ConversationHandler(
         ],
     },
     fallbacks=[CommandHandler('start', start_over_manager)],
+    name='Articles_Conversation',
+    persistent=True
 )
