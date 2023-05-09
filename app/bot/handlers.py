@@ -1,4 +1,5 @@
 from telegram import Update
+from telegram.error import BadRequest
 from telegram.ext import (CallbackQueryHandler, CommandHandler, ContextTypes,
                           ConversationHandler)
 
@@ -67,7 +68,11 @@ async def article_manager(
     query = update.callback_query
     category = query.data
     source = context.user_data['source']
-    await query.delete_message()
+    try:
+        # Сообщение может быть удалено только в течение 48 часов.
+        await query.delete_message()
+    except BadRequest:
+        pass
     await send_article_set_description(chat_id, source, category, context)
     articles = await get_articles(chat_id, category, source)
     if not articles:
