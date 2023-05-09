@@ -120,8 +120,6 @@ async def get_articles_from_db(
         .limit(user.article_limit)
     )
     articles = articles.scalars().all()
-    if articles:
-        await mark_articles_as_read(user, articles, session)
     return articles
 
 

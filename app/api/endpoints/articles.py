@@ -8,7 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ...core.db import get_session
 from ...core.user import current_superuser, current_user
 from ...crud.articles import (get_article_amount_from_db,
-                              get_article_by_id_from_db, get_articles_from_db)
+                              get_article_by_id_from_db, get_articles_from_db,
+                              mark_articles_as_read)
 from ...filters.articles import CategoryFilter, SourceFilter
 from ...models import UserModel
 from ...schemas.articles import Article
@@ -41,6 +42,8 @@ async def get_articles(
             source.value if source else None,
         )
     )
+    if articles:
+        await mark_articles_as_read(user, articles, session)
     return articles
 
 

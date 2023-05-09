@@ -1,7 +1,7 @@
 import uuid
+from pathlib import Path
 from typing import Optional
 from urllib.parse import urljoin
-from pathlib import Path
 
 from dotenv import load_dotenv
 from pydantic import BaseSettings, EmailStr
