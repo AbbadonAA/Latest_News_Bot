@@ -1,11 +1,13 @@
 FROM python:3.10-slim-buster
 
+RUN python -m pip install --upgrade pip
+
 WORKDIR /LATEST_NEWS_BOT
 
-COPY requirements.txt ./
+COPY requirements.txt /LATEST_NEWS_BOT
 
 RUN pip3 install -r requirements.txt --no-cache-dir
 
-COPY . .
+COPY . /LATEST_NEWS_BOT
 
-CMD ["python", "run.py"]
+CMD uvicorn run:app --host 0.0.0.0 --port 8000 --reload

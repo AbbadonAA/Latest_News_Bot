@@ -65,7 +65,7 @@ BOT_TOKEN=5157247582:ATFpZanqlutiNMJfvO6tiNUDPnBkFAmiVi4  # (пример) то�
 POSTGRES_DB=news_db  # название БД
 POSTGRES_USER=postgres  # имя пользователя БД
 POSTGRES_PASSWORD=postgres  # пароль БД
-DB_HOST=localhost  # хост БД
+DB_HOST=localhost  # хост БД (для запуска через docker-compose заменить на имя сервиса с БД)
 DB_PORT=7000  # порт БД
  ``` 
 
