@@ -1,5 +1,8 @@
+import asyncio
+
 from fastapi import FastAPI
 
+from app.api.jobs import schedule_jobs
 from app.api.routers import main_router
 from app.bot.main import start_bot
 from app.core.config import settings
@@ -13,6 +16,9 @@ def create_app() -> FastAPI:
     )
     app.include_router(main_router)
 
+    async def start_scheduled_jobs():
+        await schedule_jobs()
+
     @app.on_event('startup')
     async def on_startup():
         """Действия при запуске сервера."""
@@ -20,6 +26,8 @@ def create_app() -> FastAPI:
         await create_first_superuser()
         bot_instance = await start_bot()
         app.state.bot_instance = bot_instance
+        # Запуск запланированных задач:
+        asyncio.create_task(start_scheduled_jobs())
 
     @app.on_event('shutdown')
     async def on_shutdown():

@@ -1,8 +1,10 @@
 import asyncio
 
+import aioschedule as schedule
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
+from app.core.db import get_session
 
 from ..crud.articles import (delete_old_articles_from_db,
                              get_article_amount_from_db)
@@ -37,7 +39,7 @@ async def start_parsers_job(
 
 async def delete_old_articles_job(
     session: AsyncSession,
-    days: int = settings.DAYS
+    days: int = settings.STORAGE_DAYS
 ):
     """Удаление статей, дата кот. отстает от текущей больше, чем на days."""
     count_before_del = await get_article_amount_from_db(session)
@@ -45,3 +47,15 @@ async def delete_old_articles_job(
     count_after_del = await get_article_amount_from_db(session)
     num_deleted = count_before_del - count_after_del
     return {'result': f'Из БД успешно удалено {num_deleted} старых статей.'}
+
+
+async def schedule_jobs():
+    """Исполнение задач по расписанию."""
+    sessions = get_session()
+    async for session in sessions:
+        schedule.every(
+            settings.PARSER_FREQUENCY).minutes.do(start_parsers_job, session)
+        schedule.every().day.at('00:00').do(delete_old_articles_job, session)
+    while True:
+        await schedule.run_pending()
+        await asyncio.sleep(1)

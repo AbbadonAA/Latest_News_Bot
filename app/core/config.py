@@ -30,7 +30,8 @@ class Settings(BaseSettings):
     # хеширование токенов:
     SECRET: str = str(uuid.uuid4())
     # бизнес-логика:
-    DAYS: int
+    PARSER_FREQUENCY: int
+    STORAGE_DAYS: int
     # первый суперпользователь:
     FIRST_SUPERUSER_EMAIL: Optional[EmailStr] = None
     FIRST_SUPERUSER_PASSWORD: Optional[str] = None

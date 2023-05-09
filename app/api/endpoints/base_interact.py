@@ -23,7 +23,7 @@ async def start_parsers(
 @router.delete('/', dependencies=[Depends(current_superuser)])
 async def delete_old_articles(
     session: AsyncSession = Depends(get_session),
-    days: int = settings.DAYS
+    days: int = settings.STORAGE_DAYS
 ):
     """Эндпоинт для ручного запуска очистки БД."""
     return await delete_old_articles_job(session)
