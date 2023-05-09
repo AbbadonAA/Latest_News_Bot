@@ -1,3 +1,4 @@
+aioschedule==0.5.2
 aiosqlite==0.18.0
 alembic==1.10.0
 anyio==3.6.2
