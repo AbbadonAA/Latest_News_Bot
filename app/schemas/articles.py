@@ -32,6 +32,7 @@ class Article(BaseModel):
     link: str
     picture_link: Optional[str]
     video_link: Optional[str]
+    video_preview_link: Optional[str]
     authors: list[Author] = []
     infographic_links: list[Infographic] = []
 

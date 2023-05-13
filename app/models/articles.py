@@ -47,9 +47,9 @@ class Article(Base):
     overview = mapped_column(Text, nullable=True)
     text = mapped_column(Text, nullable=True)
     link = mapped_column(String, nullable=False, unique=True)
-    # Разобраться, как хранить картинки. Пока - string со ссылкой.
     picture_link = mapped_column(String, nullable=True)
     video_link = mapped_column(String, nullable=True)
+    video_preview_link = mapped_column(String, nullable=True)
     infographic_links: Mapped[list['Infographic']] = (
         relationship(
             'Infographic',
