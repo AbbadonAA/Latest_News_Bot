@@ -11,6 +11,7 @@ class ArticleItem(scrapy.Item):
     link = scrapy.Field()
     picture_link = scrapy.Field()
     video_link = scrapy.Field()
+    video_preview_link = scrapy.Field()
     infographic_links = scrapy.Field()
     authors = scrapy.Field()
     source = scrapy.Field()

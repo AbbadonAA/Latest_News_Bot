@@ -72,6 +72,10 @@ class RbcSpider(scrapy.Spider):
                         .css('img::attr(src)').get())
         video_link = (response.css(
             'span.article__inline-video__link::attr(data-mp4)')).get()
+        video_preview_link = (
+            response.css('div.article__inline-video[itemscope="itemscope"]')
+            .css('link[itemprop="thumbnailUrl"]::attr(href)').get()
+        )
         infographic_links = (response.css('div.g-mobile-visible')
                              .css('div.article__picture__wrap')
                              .css('img::attr(src)').getall())
@@ -86,6 +90,7 @@ class RbcSpider(scrapy.Spider):
             link=response.request.url,
             picture_link=picture_link,
             video_link=video_link,
+            video_preview_link=video_preview_link,
             infographic_links=infographic_links,
             authors=authors,
             source=SOURCE

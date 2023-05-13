@@ -10,6 +10,7 @@ NEWSPIDER_MODULE = "parse_news.spiders"
 
 ROBOTSTXT_OBEY = True
 
+LOG_LEVEL = 'WARNING'
 ITEM_PIPELINES = {
    "app.services.parse_news.pipelines.ArticlesToDBPipeline": 300,
 }
