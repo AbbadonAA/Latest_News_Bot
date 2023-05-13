@@ -76,7 +76,7 @@ class RbcSpider(scrapy.Spider):
             response.css('div.article__inline-video[itemscope="itemscope"]')
             .css('link[itemprop="thumbnailUrl"]::attr(href)').get()
         )
-        infographic_links = (response.css('div.g-mobile-visible')
+        infographic_links = (response.css('div.article__text')
                              .css('div.article__picture__wrap')
                              .css('img::attr(src)').getall())
         authors = (response.css('span.article__authors__author__name::text')
