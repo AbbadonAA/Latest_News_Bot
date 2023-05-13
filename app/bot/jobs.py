@@ -1,5 +1,8 @@
+import aiofiles
+from telegram import InputFile
 from telegram.ext import ContextTypes
 
+from app.core.config import BASE_DIR
 from app.core.db import get_session
 from app.crud.articles import get_articles_from_db, mark_articles_as_read
 from app.crud.user import (create_user, get_user_article_limit_from_db,
@@ -9,6 +12,9 @@ from app.filters.articles import CategoryFilter, SourceFilter
 from app.models.articles import Article
 
 from .menu import article_keyboard
+
+IMG_NOT_FOUND_PATH = str(
+    BASE_DIR / "app" / "api" / "templates" / 'img_not_found.png')
 
 
 async def get_or_create_user(chat_id: int):
@@ -67,8 +73,9 @@ async def get_picture_for_msg(article: Article) -> str:
         elif video_preview:
             picture = video_preview
         else:
-            # Временная заглушка. Далее - из файла.
-            picture = 'https://t-bike.ru/images/products/no-image.jpg'
+            async with aiofiles.open(IMG_NOT_FOUND_PATH, 'rb') as f:
+                content = await f.read()
+            picture = InputFile(content)
     return picture
 
 
