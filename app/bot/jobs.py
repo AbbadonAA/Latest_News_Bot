@@ -56,6 +56,22 @@ async def get_articles(chat_id: int, category: str, source: str):
     return articles
 
 
+async def get_picture_for_msg(article: Article) -> str:
+    """Получение картинки для превью статьи."""
+    picture = article.picture_link
+    if not picture:
+        infographics = article.infographic_links
+        video_preview = article.video_preview_link
+        if infographics:
+            picture = infographics[0]
+        elif video_preview:
+            picture = video_preview
+        else:
+            # Временная заглушка. Далее - из файла.
+            picture = 'https://t-bike.ru/images/products/no-image.jpg'
+    return picture
+
+
 async def send_article(
     article: Article,
     chat_id: int,
@@ -63,22 +79,19 @@ async def send_article(
 ):
     """Отправка статьи пользователю"""
     title = article.title
-    picture = article.picture_link
-    if not picture:
-        # Временная заглушка. Потом нужна своя картинка из templates.
-        picture = 'https://t-bike.ru/images/products/no-image.jpg'
+    category = article.category
     overview = article.overview
     if not overview:
         overview = ''
     else:
         overview += '\n\n'
-    category = article.category
     msg_text = (
         f'<b>{title}</b>\n\n'
         f'{overview}'
         f'<i>Категория: {category}</i>\n'
         f'<i>Источник: {article.source}</i>'
     )
+    picture = await get_picture_for_msg(article)
     keyboard = article_keyboard(article.id)
     await context.bot.send_photo(
         chat_id,

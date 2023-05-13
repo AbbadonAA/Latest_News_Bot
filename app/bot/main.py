@@ -20,6 +20,7 @@ def create_bot() -> Application:
         .persistence(persistence=bot_persistance)
         .build()
     )
+    # Место для лога о создании бота.
     return bot_instance
 
 
@@ -42,4 +43,5 @@ async def start_bot(webhook_mode: bool = settings.WEBHOOK) -> Application:
     else:
         await bot_instance.updater.start_polling()
     await bot_instance.start()
+    # Место для лога о запуске бота.
     return bot_instance

@@ -28,8 +28,13 @@ async def start_over_manager(
     """Повторный возврат в главное меню без создания сообщения."""
     context.user_data.clear()
     query = update.callback_query
-    await query.answer()
-    await query.edit_message_text(MAIN_MENU_TXT, reply_markup=main_keyboard)
+    if not query:
+        await update.message.reply_text(
+            MAIN_MENU_TXT, reply_markup=main_keyboard)
+    else:
+        await query.answer()
+        await query.edit_message_text(
+            MAIN_MENU_TXT, reply_markup=main_keyboard)
     return MAIN_MENU_NUM
 
 
@@ -72,13 +77,18 @@ async def article_manager(
         # Сообщение может быть удалено только в течение 48 часов.
         await query.delete_message()
     except BadRequest:
+        # Место для лога об ошибке удаления сообщения.
         pass
     await send_article_set_description(chat_id, source, category, context)
     articles = await get_articles(chat_id, category, source)
     if not articles:
         await send_not_found_msg(chat_id, context)
     for article in articles:
-        await send_article(article, chat_id, context)
+        try:
+            await send_article(article, chat_id, context)
+        except BadRequest:
+            # Место для лога об ошибке отправки статьи.
+            pass
     await context.bot.send_message(
         chat_id,
         MAIN_MENU_TXT,
