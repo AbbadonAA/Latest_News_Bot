@@ -20,6 +20,7 @@ async def add_article_to_db(session: AsyncSession, item: Item) -> Article:
         text=item['text'],
         link=item['link'],
         video_link=item['video_link'],
+        video_preview_link=item['video_preview_link'],
         picture_link=item['picture_link'],
         source=item['source']
     )
