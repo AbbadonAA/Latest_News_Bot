@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 class Settings(BaseSettings):
     """Настройки проекта."""
-    # настройки приложения:
+    # Настройки приложения:
     APP_TITLE: str = 'LATEST NEWS PARSER'
     APP_DESCRIPTION: str = (
         'API для запуска парсеров и получения новостных статей')
@@ -21,27 +21,33 @@ class Settings(BaseSettings):
     PORT: int
     DOMAIN: bool
     DOMAIN_NAME: str
-    # настройки БД:
+    DEBUG: bool = False
+    # Настройки БД:
     POSTGRES_DB: str
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     DB_HOST: str
     DB_PORT: str
-    # хеширование токенов:
+    # Хеширование токенов:
     SECRET: str = str(uuid.uuid4())
-    # бизнес-логика:
+    # Бизнес-логика:
     PARSER_FREQUENCY: int
     STORAGE_DAYS: int
-    # первый суперпользователь:
+    # Первый суперпользователь:
     FIRST_SUPERUSER_EMAIL: Optional[EmailStr] = None
     FIRST_SUPERUSER_PASSWORD: Optional[str] = None
     FIRST_SUPERUSER_CHAT_ID: Optional[int] = None
-    # данные бота:
+    # Данные бота:
     IP: str = '127.0.0.1'
     WEBHOOK: bool
     BOT_TOKEN: str
     BOT_PERSISTENCE_FILE: str = str(
         BASE_DIR / "app" / "bot" / "bot_persistence_file")
+    # Настройки логгирования:
+    LOG_LOCATION: str = "logs/warning.log"
+    LOG_ROTATION: str = "12:00"
+    LOG_COMPRESSION: str = "tar.gz"
+    LOG_LEVEL: str = "WARNING"
 
     @property
     def database_url(self) -> str:

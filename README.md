@@ -46,6 +46,7 @@
  ```dotenv
 # Переменные API
 APP_TITLE=LATEST_NEWS_PARSER  # (пример) название приложения
+DEBUG=False  # True для включения режима отладки
 HOST=0.0.0.0  # хост
 PORT=8080  # порт
 DOMAIN=False  # имеется ли DOMAIN_NAME

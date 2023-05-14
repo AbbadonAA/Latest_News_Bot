@@ -1,6 +1,7 @@
 import asyncio
 
 import aioschedule as schedule
+from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -22,6 +23,7 @@ async def start_parsers_job(
     session: AsyncSession
 ):
     """Запуск парсеров для заполнения БД."""
+    logger.info('Запущены парсеры для сбора новостных статей.')
     count_before_add = await get_article_amount_from_db(session)
     tasks = []
     # Пауки запускаются в отдельных асинхронных подпроцессах.
@@ -34,6 +36,9 @@ async def start_parsers_job(
     await asyncio.gather(*tasks)
     count_after_add = await get_article_amount_from_db(session)
     num_added = count_after_add - count_before_add
+    logger.info(
+        f'Парсеры завершили работу. В БД добавлено {num_added} записей.'
+    )
     return {'result': f'В БД успешно добавлено {num_added} записей.'}
 
 
@@ -42,10 +47,12 @@ async def delete_old_articles_job(
     days: int = settings.STORAGE_DAYS
 ):
     """Удаление статей, дата кот. отстает от текущей больше, чем на days."""
+    logger.info('Запущена очистка БД от старых записей.')
     count_before_del = await get_article_amount_from_db(session)
     await delete_old_articles_from_db(session, days)
     count_after_del = await get_article_amount_from_db(session)
     num_deleted = count_before_del - count_after_del
+    logger.info(f'БД очищена - удалено {num_deleted} записейю')
     return {'result': f'Из БД успешно удалено {num_deleted} старых статей.'}
 
 

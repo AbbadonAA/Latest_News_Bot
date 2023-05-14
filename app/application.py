@@ -7,10 +7,12 @@ from app.api.routers import main_router
 from app.bot.main import start_bot
 from app.core.config import settings
 from app.core.init_db import create_first_superuser
+from app.core.logger_config import setup_logging
 
 
 def create_app() -> FastAPI:
     app = FastAPI(
+        debug=settings.DEBUG,
         title=settings.APP_TITLE,
         description=settings.APP_DESCRIPTION
     )
@@ -22,6 +24,7 @@ def create_app() -> FastAPI:
     @app.on_event('startup')
     async def on_startup():
         """Действия при запуске сервера."""
+        setup_logging()
         # Создание первого суперпользователя:
         await create_first_superuser()
         bot_instance = await start_bot()

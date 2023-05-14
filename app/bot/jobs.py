@@ -1,4 +1,5 @@
 import aiofiles
+from loguru import logger
 from telegram import InputFile
 from telegram.ext import ContextTypes
 
@@ -66,13 +67,17 @@ async def get_picture_for_msg(article: Article) -> str:
     """Получение картинки для превью статьи."""
     picture = article.picture_link
     if not picture:
+        logger.info(f'Статья {article.id}: нет изображения для превью.')
         infographics = article.infographic_links
         video_preview = article.video_preview_link
         if infographics:
+            logger.info(f'Статья {article.id}: использована инфографика.')
             picture = infographics[0]
         elif video_preview:
+            logger.info(f'Статья {article.id}: использовано превью из видео.')
             picture = video_preview
         else:
+            logger.info(f'Статья {article.id}: использовано IMG_NOT_FOUND.')
             async with aiofiles.open(IMG_NOT_FOUND_PATH, 'rb') as f:
                 content = await f.read()
             picture = InputFile(content)
@@ -129,6 +134,7 @@ async def send_not_found_msg(
     chat_id: int,
     context: ContextTypes.DEFAULT_TYPE
 ):
+    logger.info(f'Пользователь {chat_id} не получил статьи по запросу.')
     msg_text = (
         'К сожалению новых статей по выбранным параметрам не найдено. '
         'Попробуйте позже или измените параметры.'

@@ -1,3 +1,4 @@
+from loguru import logger
 from telegram import Update
 from telegram.error import BadRequest
 from telegram.ext import (CallbackQueryHandler, CommandHandler, ContextTypes,
@@ -29,6 +30,7 @@ async def start_over_manager(
     context.user_data.clear()
     query = update.callback_query
     if not query:
+        logger.warning('Создано новое меню, т.к. не обнаружено предыдущее.')
         await update.message.reply_text(
             MAIN_MENU_TXT, reply_markup=main_keyboard)
     else:
@@ -74,11 +76,10 @@ async def article_manager(
     category = query.data
     source = context.user_data['source']
     try:
-        # Сообщение может быть удалено только в течение 48 часов.
         await query.delete_message()
     except BadRequest:
-        # Место для лога об ошибке удаления сообщения.
-        pass
+        # Сообщение может быть удалено только в течение 48 часов.
+        logger.error('Неудачная попытка удалить сообщение с устаревшим меню.')
     await send_article_set_description(chat_id, source, category, context)
     articles = await get_articles(chat_id, category, source)
     if not articles:
@@ -87,8 +88,9 @@ async def article_manager(
         try:
             await send_article(article, chat_id, context)
         except BadRequest:
-            # Место для лога об ошибке отправки статьи.
-            pass
+            logger.error(
+                f'Неудачная отправка сообщения со статьей: {article.id}.'
+            )
     await context.bot.send_message(
         chat_id,
         MAIN_MENU_TXT,

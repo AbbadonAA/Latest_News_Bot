@@ -133,3 +133,4 @@ dmypy.json
 *.json
 *.csv
 bot_persistence_file
+/logs

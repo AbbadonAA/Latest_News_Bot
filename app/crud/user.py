@@ -1,6 +1,7 @@
 import contextlib
 
 from fastapi_users.exceptions import UserAlreadyExists
+from loguru import logger
 from pydantic import EmailStr
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -35,6 +36,7 @@ async def create_user(
                             is_superuser=is_superuser
                         )
                     )
+                    logger.info(f'Создан пользователь: {user.chat_id}.')
                     return user
     except UserAlreadyExists:
         pass
