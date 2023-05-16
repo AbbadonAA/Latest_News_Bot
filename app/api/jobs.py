@@ -52,7 +52,7 @@ async def delete_old_articles_job(
     await delete_old_articles_from_db(session, days)
     count_after_del = await get_article_amount_from_db(session)
     num_deleted = count_before_del - count_after_del
-    logger.info(f'БД очищена - удалено {num_deleted} записейю')
+    logger.info(f'БД очищена - удалено {num_deleted} записей.')
     return {'result': f'Из БД успешно удалено {num_deleted} старых статей.'}
 
 
