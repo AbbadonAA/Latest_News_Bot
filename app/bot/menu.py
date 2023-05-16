@@ -57,6 +57,7 @@ source_keyboard = keyboard_constructor(
 )
 category_keyboard = keyboard_constructor(
     {c.value: c.value for c in CategoryFilter},
+    n_cols=4,
     back_button=str(SOURCE_MENU_NUM)
 )
 settings_keyboard = keyboard_constructor(
