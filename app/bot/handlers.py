@@ -79,7 +79,10 @@ async def article_manager(
         await query.delete_message()
     except BadRequest:
         # Сообщение может быть удалено только в течение 48 часов.
-        logger.error('Неудачная попытка удалить сообщение с устаревшим меню.')
+        logger.warning(
+            'Неудачная попытка удалить сообщение с устаревшим меню, '
+            f'chat ID: {chat_id}.'
+        )
     await send_article_set_description(chat_id, source, category, context)
     articles = await get_articles(chat_id, category, source)
     if not articles:
