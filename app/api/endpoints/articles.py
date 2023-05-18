@@ -5,6 +5,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
+
 from ...core.db import get_session
 from ...core.user import current_superuser, current_user
 from ...crud.articles import (get_article_amount_from_db,
@@ -74,26 +76,31 @@ async def get_article_html(
     """Получение статьи в формате html."""
     article = await get_article_by_id_from_db(session, article_id)
     if not article:
-        raise HTTPException(
+        data = {'days': settings.STORAGE_DAYS}
+        return templates.TemplateResponse(
+            '404.html',
+            {'request': request, **data},
             status_code=HTTPStatus.NOT_FOUND,
-            detail='Такой статьи нет в БД.')
+        )
     infographic_links = [
         link.infographic_link for link in article.infographic_links
     ]
     authors = [author.author_name for author in article.authors]
     data = {
-        "title": article.title,
-        "date": article.date,
-        "category": article.category,
-        "overview": article.overview,
-        "original_link": article.link,
-        "text": article.text.split('\n'),
-        "picture": article.picture_link,
-        "infographics": infographic_links,
-        "video": article.video_link,
-        "authors": authors,
-        "source": article.source
+        'title': article.title,
+        'date': article.date,
+        'category': article.category,
+        'overview': article.overview,
+        'original_link': article.link,
+        'text': article.text.split('\n'),
+        'picture': article.picture_link,
+        'infographics': infographic_links,
+        'video': article.video_link,
+        'authors': authors,
+        'source': article.source
     }
     return templates.TemplateResponse(
-        "article.html", {"request": request, **data}
+        'article.html',
+        {'request': request, **data},
+        status_code=HTTPStatus.OK,
     )

@@ -49,7 +49,7 @@ def pattern(menu):
 
 
 main_keyboard = keyboard_constructor(
-    {'📜 Статьи': str(SOURCE_MENU_NUM), '⚒️ Настройки': str(SETTINGS_MENU_NUM)}
+    {'📰 Статьи': str(SOURCE_MENU_NUM), '⚒️ Настройки': str(SETTINGS_MENU_NUM)}
 )
 source_keyboard = keyboard_constructor(
     {s.value: s.value for s in SourceFilter},
