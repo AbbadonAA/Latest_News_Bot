@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 from dateutil.tz import tzlocal
+from loguru import logger
 from scrapy import Item
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -131,7 +132,10 @@ async def get_article_by_id_from_db(
     """Получение статьи по её id в БД."""
     stmt = select(Article).where(Article.id == article_id)
     article = await session.execute(stmt)
-    return article.scalar()
+    article = article.scalar()
+    if not article:
+        logger.error(f'Не найдена статья: {article_id}.')
+    return article
 
 
 async def delete_old_articles_from_db(
