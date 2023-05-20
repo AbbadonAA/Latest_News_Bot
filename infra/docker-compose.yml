@@ -30,6 +30,16 @@ services:
     volumes:
       - bot-data:/LATEST_NEWS_BOT/app/bot/
     ports:
-      - "8000:8000"
+      - "8080:8080"
     env_file:
       - ../.env
+
+# Если на сервере не запущен nginx:
+  # nginx:
+  #   image: nginx:1.19.3
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/conf.d/default.conf
+  #   depends_on:
+  #     - backend
