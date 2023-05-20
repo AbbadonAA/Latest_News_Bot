@@ -1,0 +1,107 @@
+name: latest_news_workflow
+
+on: push
+
+jobs:
+  tests:
+    name: Testing
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.10
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8
+        pip install -r requirements.txt
+    - name: Ckeck flake8
+      run: |
+        python -m flake8
+
+  build_and_push:
+    name: Push Docker image to DockerHub
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    - name: Login to Docker
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Push to DockerHub
+      uses: docker/build-push-action@v2
+      with:
+        context: backend/
+        push: true
+        tags: abbadon666666/latest_news_bot:latest
+  
+  deploy:
+    name: Deploy MyServer
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    if:
+      contains(
+        'refs/heads/master',
+        github.ref)
+    steps:
+    - name: executing remote ssh commands to deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          cd latest-news/infra/
+          sudo docker-compose stop
+          echo y|sudo docker-compose rm latest_news_bot
+          sudo docker rmi abbadon666666/latest_news_bot
+          cd ..
+          touch .env
+          echo APP_TITLE=${{ secrets.APP_TITLE }} > .env
+          echo DEBUG=${{ secrets.DEBUG }} >> .env
+          echo HOST=${{ secrets.HOST }} >> .env
+          echo PORT=${{ secrets.PORT }} >> .env
+          echo DOMAIN=${{ secrets.DOMAIN }} >> .env
+          echo DOMAIN_NAME=${{ secrets.DOMAIN_NAME }} >> .env
+          echo PARSER_FREQUENCY=${{ secrets.PARSER_FREQUENCY }} >> .env
+          echo STORAGE_DAYS=${{ secrets.STORAGE_DAYS }} >> .env
+          echo SECRET=${{ secrets.SECRET }} >> .env
+          echo FIRST_SUPERUSER_EMAIL=${{ secrets.FIRST_SUPERUSER_EMAIL }} >> .env
+          echo FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }} >> .env
+          echo IP=${{ secrets.IP }} >> .env
+          echo WEBHOOK=${{ secrets.WEBHOOK }} >> .env
+          echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} >> .env
+          echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
+          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+          echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+          cd infra/
+          sudo docker-compose up -d
+  
+  migrations:
+    name: Apply migrations
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v2
+    - name: executing remote ssh commands to apply migrations
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          cd latest-news/infra/
+          sleep 30  # Pause to ensure containers are up
+          docker-compose exec -T -w latest_news_bot alembic upgrade head
+  
