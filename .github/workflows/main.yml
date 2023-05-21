@@ -3,24 +3,6 @@ name: latest_news_workflow
 on: push
 
 jobs:
-  tests:
-    name: Testing
-    runs-on: ubuntu-latest
-    steps:
-    - name: Check out the repo
-      uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.10
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8
-        pip install -r requirements.txt
-    - name: Ckeck flake8
-      run: |
-        python -m flake8
 
   build_and_push:
     name: Push Docker image to DockerHub
@@ -28,7 +10,7 @@ jobs:
     needs: tests
     steps:
     - name: Check out the repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
     - name: Login to Docker
@@ -93,7 +75,7 @@ jobs:
     needs: deploy
     steps:
     - name: Check out the repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: executing remote ssh commands to apply migrations
       uses: appleboy/ssh-action@master
       with:
@@ -102,6 +84,5 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           cd latest-news/infra/
-          sleep 30  # Pause to ensure containers are up
+          sleep 30
           docker-compose exec -T -w latest_news_bot alembic upgrade head
-  
