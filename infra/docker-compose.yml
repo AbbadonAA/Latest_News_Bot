@@ -33,6 +33,7 @@ services:
       - "8080:8080"
     env_file:
       - ../.env
+    command: ["bash", "-c", "alembic upgrade head && uvicorn run:app --host 0.0.0.0 --port 8080 --reload"]
 
 # Если на сервере не запущен nginx:
   # nginx:
