@@ -45,7 +45,6 @@ jobs:
           echo y|sudo docker-compose rm latest_news_bot
           sudo docker rmi abbadon666666/latest_news_bot
           cd ..
-          touch .env
           echo APP_TITLE=${{ secrets.APP_TITLE }} > .env
           echo DEBUG=${{ secrets.DEBUG }} >> .env
           echo HOST=${{ secrets.HOST }} >> .env
