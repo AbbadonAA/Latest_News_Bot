@@ -1,5 +1,7 @@
 # Latest News
-  
+
+  ![latest_news_workflow](https://github.com/AbbadonAA/Latest_News_Bot/workflows/latest_news_workflow/badge.svg)
+
  ## Описание 
   
  **Latest News** - это API сервиса для парсинга новостных статей с интегрированным ботом Telegram.
