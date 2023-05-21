@@ -37,7 +37,7 @@ jobs:
     - name: executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
+        host: ${{ secrets.IP }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
@@ -79,7 +79,7 @@ jobs:
     - name: executing remote ssh commands to apply migrations
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
+        host: ${{ secrets.IP }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
