@@ -5,7 +5,7 @@ volumes:
   bot-data:
 
 services:
-  db:
+  news_db:
     image: postgres:13.2
     restart: always
     container_name: latest_news_db
@@ -19,14 +19,14 @@ services:
       - ../.env
     command: -p 6100
 
-  backend:
+  news_backend:
     image: abbadon666666/latest_news_bot:latest
     container_name: latest_news_bot
     restart: always
     environment:
       - TZ=Europe/Moscow
     depends_on:
-      - db
+      - news_db
     volumes:
       - bot-data:/LATEST_NEWS_BOT/app/bot/
     ports:
