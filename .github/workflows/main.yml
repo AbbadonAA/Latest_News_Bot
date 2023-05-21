@@ -30,7 +30,7 @@ jobs:
     needs: build_and_push
     if:
       contains(
-        'refs/heads/master',
+        'refs/heads/main',
         github.ref)
     steps:
     - name: executing remote ssh commands to deploy
