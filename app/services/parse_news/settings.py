@@ -2,6 +2,7 @@ import sys
 
 # Необходимо для запуска паука вручную (иначе не видит импорты из app)
 sys.path.append('/home/abbadon/dev/Latest_News_Bot/')
+sys.path.append('/LATEST_NEWS_BOT/')
 
 BOT_NAME = "parse_news"
 
