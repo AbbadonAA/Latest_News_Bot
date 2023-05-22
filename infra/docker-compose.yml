@@ -1,7 +1,7 @@
 version: '3.3'
 
 volumes:
-  postgres_data:
+  news_data:
   bot-data:
 
 services:
@@ -12,7 +12,7 @@ services:
     environment:
       - TZ=Europe/Moscow
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - news_data:/var/lib/postgresql/data/
     ports:
       - "6100:6100"
     env_file:
