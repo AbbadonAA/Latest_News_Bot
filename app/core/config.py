@@ -42,12 +42,12 @@ class Settings(BaseSettings):
     WEBHOOK: bool
     BOT_TOKEN: str
     BOT_PERSISTENCE_FILE: str = str(
-        BASE_DIR / "app" / "bot" / "bot_persistence_file")
+        BASE_DIR / 'app' / 'bot' / 'data' / 'bot_persistence_file')
     # Настройки логгирования:
-    LOG_LOCATION: str = "logs/warning.log"
-    LOG_ROTATION: str = "12:00"
-    LOG_COMPRESSION: str = "tar.gz"
-    LOG_LEVEL: str = "WARNING"
+    LOG_LOCATION: str = 'logs/warning.log'
+    LOG_ROTATION: str = '12:00'
+    LOG_COMPRESSION: str = 'tar.gz'
+    LOG_LEVEL: str = 'WARNING'
 
     @property
     def database_url(self) -> str:

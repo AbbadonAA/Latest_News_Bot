@@ -28,7 +28,7 @@ services:
     depends_on:
       - news_db
     volumes:
-      - bot-data:/LATEST_NEWS_BOT/app/bot/
+      - bot-data:/LATEST_NEWS_BOT/app/bot/data/
     ports:
       - "8080:8080"
     env_file:
