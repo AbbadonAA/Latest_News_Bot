@@ -1,0 +1,34 @@
+version: '3.3'
+
+volumes:
+  news_data:
+  bot-data:
+
+services:
+  news_db:
+    image: postgres:13.2
+    restart: always
+    container_name: latest_news_db
+    environment:
+      - TZ=Europe/Moscow
+    volumes:
+      - news_data:/var/lib/postgresql/data/
+    ports:
+      - "6100:6100"
+    env_file:
+      - ../.env
+    command: -p 6100
+
+  news_backend:
+    image: abbadon666666/latest_news_bot:latest
+    container_name: latest_news_bot
+    restart: always
+    environment:
+      - TZ=Europe/Moscow
+    volumes:
+      - bot-data:/LATEST_NEWS_BOT/app/bot/data/
+    ports:
+      - "8080:8080"
+    env_file:
+      - ../.env
+    command: ["bash", "-c", "alembic upgrade head && uvicorn run:app --host 0.0.0.0 --port 8080 --reload"]
