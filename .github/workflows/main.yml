@@ -64,8 +64,6 @@ jobs:
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
           echo DB_HOST=${{ secrets.DB_HOST }} >> .env
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-# cd infra/
-# sudo docker-compose up -d
   
   start_app:
     name: Start Application
@@ -83,21 +81,3 @@ jobs:
         script: |
           cd latest-news/infra/
           sudo docker-compose up -d
-
-  # migrations:
-  #   name: Apply migrations
-  #   runs-on: ubuntu-latest
-  #   needs: deploy
-  #   steps:
-  #   - name: Check out the repo
-  #     uses: actions/checkout@v3
-  #   - name: executing remote ssh commands to apply migrations
-  #     uses: appleboy/ssh-action@master
-  #     with:
-  #       host: ${{ secrets.IP }}
-  #       username: ${{ secrets.USER }}
-  #       key: ${{ secrets.SSH_KEY }}
-  #       script: |
-  #         cd latest-news/infra/
-  #         sleep 30
-  #         docker-compose exec -T -w latest_news_bot alembic upgrade head
