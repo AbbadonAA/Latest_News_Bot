@@ -52,7 +52,7 @@ DEBUG=False  # True для включения режима отладки
 HOST=0.0.0.0  # хост
 PORT=8080  # порт
 DOMAIN=False  # имеется ли DOMAIN_NAME
-DOMAIN_NAME=example.com  # пример при наличии (необходим сертификат SSL)
+DOMAIN_NAME=https://example.com  # пример при наличии (необходим сертификат SSL)
 PARSER_FREQUENCY=5  # периодичность запуска парсеров (минуты)
 STORAGE_DAYS=30  # срок хранения данных в БД
 SECRET=539e2390-9cc3-4bc7-aec1-2e96471ba49f  # (пример) uuid для хеширования
@@ -95,7 +95,7 @@ Ngrok позволяет создавать временный
       ```
   - Задайте значение переменной окружения (.env):
       ```dotenv
-      DOMAIN_NAME=1234-56-78-9.eu.ngrok.io  # Пример
+      DOMAIN_NAME=https://1234-56-78-9.eu.ngrok.io  # Пример
       ```
 ----
 </details>
@@ -130,11 +130,11 @@ Ngrok позволяет создавать временный
 <details>
 <summary><b><i>Упрощенный вариант установки для запуска в контейнерах</i></b></summary>
 
- 1. Создайте директорию для приложения: 
+1. Создайте директорию для приложения: 
  ```shell
  mkdir LATEST_NEWS (пример)
  ``` 
- 2. Разместите в созданной директории файл .env со следующим наполнением:
+2. Разместите в созданной директории файл .env со следующим наполнением:
 ```dotenv
 # Переменные API
 APP_TITLE=LATEST_NEWS_PARSER  # (пример) название приложения
@@ -142,7 +142,7 @@ DEBUG=False  # True для включения режима отладки
 HOST=0.0.0.0  # хост
 PORT=8080  # порт
 DOMAIN=False  # имеется ли DOMAIN_NAME
-DOMAIN_NAME=example.com  # пример при наличии (необходим сертификат SSL)
+DOMAIN_NAME=https://example.com  # пример при наличии (необходим сертификат SSL)
 PARSER_FREQUENCY=5  # периодичность запуска парсеров (минуты)
 STORAGE_DAYS=30  # срок хранения данных в БД
 SECRET=539e2390-9cc3-4bc7-aec1-2e96471ba49f  # (пример) uuid для хеширования
@@ -165,22 +165,77 @@ DB_PORT=7000  # порт БД
 ```shell
 mkdir infra
 ```
-4. Разместите в директории /infra файл docker-compose.yml
+4. Разместите в директории /infra файл docker-compose.local.yml
 5. В директории /infra запустите docker-compose:
 ```shell
-docker-compose up -d
+docker-compose -f docker-compose.local.yml up -d
 ```
 6. Проект запущен в двух контейнерах:
 - latest_news_bot
 - latest_news_db
 </details>
 
- ## Установка на собственном сервере + GitHub Actions
- 1. Создайте на сервере директорию для приложения: 
+ ## Установка на сервере и получение сертификата SSL
+1. Создайте на сервере директорию для приложения: 
  ```shell
- mkdir ... 
+ mkdir latest-news (пример) 
  ``` 
-  
+2. Разместите в созданной директории файл .env со следующим наполнением:
+```dotenv
+# Переменные API
+APP_TITLE=LATEST_NEWS_PARSER  # (пример) название приложения
+DEBUG=False  # True для включения режима отладки
+HOST=0.0.0.0  # хост
+PORT=8080  # порт
+DOMAIN=False  # имеется ли DOMAIN_NAME
+DOMAIN_NAME=https://example.com  # пример при наличии (необходим сертификат SSL)
+PARSER_FREQUENCY=5  # периодичность запуска парсеров (минуты)
+STORAGE_DAYS=30  # срок хранения данных в БД
+SECRET=539e2390-9cc3-4bc7-aec1-2e96471ba49f  # (пример) uuid для хеширования
+FIRST_SUPERUSER_EMAIL=admin@gmail.com  # (пример) email первого суперпользователя
+FIRST_SUPERUSER_PASSWORD=AdmiN_123456789  # (пример) пароль суперпользователя
+
+# Переменные бота
+IP=127.0.0.1  # (пример) адрес вашего сервера
+WEBHOOK=False # True для запуска бота в режиме webhook
+BOT_TOKEN=5157247582:ATFpZanqlutiNMJfvO6tiNUDPnBkFAmiVi4  # (пример) токен бота Telegram
+
+# Переменные базы данных
+POSTGRES_DB=news_db  # название БД
+POSTGRES_USER=postgres  # имя пользователя БД
+POSTGRES_PASSWORD=postgres  # пароль БД
+DB_HOST=news_db  # хост БД
+DB_PORT=7000  # порт БД
+ ```
+3. Создайте директорию /infra:
+```shell
+mkdir infra
+```
+4. Разместите в директории /infra файл docker-compose.prod.yml
+5. Уточните в файле docker-compose.prod.yml переменные окружения:
+```dotenv
+VIRTUAL_HOST=example.com (укажите Ваш домен)
+LETSENCRYPT_HOST=example.com (укажите Ваш домен)
+LETSENCRYPT_EMAIL=your_email@example.com (укажите Ваш email)
+```
+6. Разместите в директории /infra файл docker-compose.nginx.yml
+7. Создайте сеть Docker:
+```shell
+docker network create nginx-proxy
+```
+8. Запустите контейнеры:
+```shell
+docker-compose -f docker-compose.nginx.yml up -d
+docker-compose -f docker-compose.prod.yml up -d
+```
+9. Проект запущен в четырех контейнерах:
+- latest_news_bot
+- latest_news_db
+- nginx-proxy
+- letsencrypt
+
+  Получен сертификат SSL и настроено автоматическое обновление сертификатов.
+
  ## Лицензия 
  - ### **MIT License** 
   
