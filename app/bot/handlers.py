@@ -90,9 +90,10 @@ async def article_manager(
     for article in articles:
         try:
             await send_article(article, chat_id, context)
-        except BadRequest:
+        except Exception as error:
             logger.error(
-                f'Неудачная отправка сообщения со статьей: {article.id}.'
+                f'Неудачная отправка сообщения со статьей: {article.id}. '
+                f'Ошибка: {error}'
             )
     await context.bot.send_message(
         chat_id,

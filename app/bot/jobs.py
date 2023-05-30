@@ -72,7 +72,7 @@ async def get_picture_for_msg(article: Article) -> str:
         video_preview = article.video_preview_link
         if infographics:
             logger.info(f'Статья {article.id}: использована инфографика.')
-            picture = infographics[0]
+            picture = infographics[0].infographic_link
         elif video_preview:
             logger.info(f'Статья {article.id}: использовано превью из видео.')
             picture = video_preview
