@@ -103,7 +103,7 @@ Ngrok позволяет создавать временный
  4. Запустите контейнер с базой данных PostgreSQL (должен быть установлен Docker): 
  ```shell
  cd infra/
- docker-compose up -d news_db
+ docker-compose -f docker-compose.local.yml up news_db -d
  ``` 
  5. В корневой директории примените миграции для создания таблиц в БД: 
  ```shell
@@ -161,7 +161,7 @@ POSTGRES_PASSWORD=postgres  # пароль БД
 DB_HOST=news_db  # хост БД
 DB_PORT=7000  # порт БД
  ``` 
-3. Создайте директорию /infra:
+3. В директории приложения создайте директорию /infra:
 ```shell
 mkdir infra
 ```
@@ -187,8 +187,8 @@ APP_TITLE=LATEST_NEWS_PARSER  # (пример) название приложен
 DEBUG=False  # True для включения режима отладки
 HOST=0.0.0.0  # хост
 PORT=8080  # порт
-DOMAIN=False  # имеется ли DOMAIN_NAME
-DOMAIN_NAME=https://example.com  # пример при наличии (необходим сертификат SSL)
+DOMAIN=True  # имеется ли DOMAIN_NAME
+DOMAIN_NAME=https://example.com  # (пример)
 PARSER_FREQUENCY=5  # периодичность запуска парсеров (минуты)
 STORAGE_DAYS=30  # срок хранения данных в БД
 SECRET=539e2390-9cc3-4bc7-aec1-2e96471ba49f  # (пример) uuid для хеширования
@@ -197,7 +197,7 @@ FIRST_SUPERUSER_PASSWORD=AdmiN_123456789  # (пример) пароль супе
 
 # Переменные бота
 IP=127.0.0.1  # (пример) адрес вашего сервера
-WEBHOOK=False # True для запуска бота в режиме webhook
+WEBHOOK=True # Запуск бота в режиме webhook
 BOT_TOKEN=5157247582:ATFpZanqlutiNMJfvO6tiNUDPnBkFAmiVi4  # (пример) токен бота Telegram
 
 # Переменные базы данных
