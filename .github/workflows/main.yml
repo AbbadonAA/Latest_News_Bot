@@ -80,4 +80,5 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           cd latest-news/infra/
+          sudo docker-compose pull
           sudo docker-compose up -d
