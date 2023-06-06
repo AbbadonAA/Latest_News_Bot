@@ -54,23 +54,21 @@
         </section>
         {% endif %}
         
-        <!-- <footer> -->
-            {% if authors %}
-            <p>Авторы:</p>
+        {% if authors %}
+        <p>Авторы:</p>
             {% for author in authors %}
             <p>{{ author }}</p>
             {% endfor %}
-            {% endif %}
-            
-            {% if source %}
+        {% endif %}
+        
+        {% if source %}
             <p>Источник: <span class="source">{{ source }}</span>></p>
-            {% endif %}
-            
-            {% if original_link %}
+        {% endif %}
+        
+        {% if original_link %}
             <p><a href="{{ original_link }}">Оригинал статьи</a></p>
-            {% endif %}
-            
-        </article>
-    <!-- </footer> -->
+        {% endif %}
+
+    </article>
 </body>
 </html>
