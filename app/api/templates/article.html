@@ -53,24 +53,24 @@
             <iframe width="560" height="315" src="{{ video }}" frameborder="0" allowfullscreen></iframe>
         </section>
         {% endif %}
-    </article>
-
-    <footer>
-        {% if authors %}
-        <p>Авторы:</p>
-        {% for author in authors %}
-        <p>{{ author }}</p>
-        {% endfor %}
-        {% endif %}
-
-        {% if source %}
-        <p>Источник: {{ source }}</p>
-        {% endif %}
-
-        {% if original_link %}
-        <p><a href="{{ original_link }}">Оригинал статьи</a></p>
-        {% endif %}
-
-    </footer>
+        
+        <!-- <footer> -->
+            {% if authors %}
+            <p>Авторы:</p>
+            {% for author in authors %}
+            <p>{{ author }}</p>
+            {% endfor %}
+            {% endif %}
+            
+            {% if source %}
+            <p>Источник: <span class="source">{{ source }}</span>></p>
+            {% endif %}
+            
+            {% if original_link %}
+            <p><a href="{{ original_link }}">Оригинал статьи</a></p>
+            {% endif %}
+            
+        </article>
+    <!-- </footer> -->
 </body>
 </html>
