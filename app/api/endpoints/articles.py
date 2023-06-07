@@ -80,7 +80,7 @@ async def get_article_html(
         return templates.TemplateResponse(
             '404.html',
             {'request': request, **data},
-            status_code=HTTPStatus.NOT_FOUND,
+            status_code=HTTPStatus.NO_CONTENT,
         )
     infographic_links = [
         link.infographic_link for link in article.infographic_links
