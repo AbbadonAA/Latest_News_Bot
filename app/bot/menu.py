@@ -35,11 +35,17 @@ def keyboard_constructor(
     return InlineKeyboardMarkup(keyboard)
 
 
-def article_keyboard(article_id: int, domain: bool = settings.DOMAIN):
+def article_keyboard(
+    article_id: int,
+    domain: bool = settings.DOMAIN,
+    iv: bool = settings.INSTANT_VIEW
+):
     """Клавиатура для сообщения с новостной статьей."""
     url = f'http://{settings.IP}:{settings.PORT}/articles/html/{article_id}'
     if domain:
         url = f'{settings.DOMAIN_NAME}/articles/html/{article_id}'
+    if iv:
+        url = f'https://t.me/iv?url={url}&rhash={settings.RHASH}'
     keyboard = keyboard_constructor({'Читать далее': None}, url=url)
     return keyboard
 

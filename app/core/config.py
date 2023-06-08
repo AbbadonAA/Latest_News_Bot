@@ -43,6 +43,8 @@ class Settings(BaseSettings):
     BOT_TOKEN: str
     BOT_PERSISTENCE_FILE: str = str(
         BASE_DIR / 'app' / 'bot' / 'data' / 'bot_persistence_file')
+    INSTANT_VIEW: bool
+    RHASH: str
     # Настройки логгирования:
     LOG_LOCATION: str = 'logs/warning.log'
     LOG_ROTATION: str = '12:00'

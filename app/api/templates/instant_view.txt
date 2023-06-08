@@ -1,0 +1,8 @@
+# Пример правил для обработки стандартного шаблона article.html
+
+~version: "2.1"
+body: //article
+title: //h1
+published_date: //time
+image_url: $body//img/@src
+@remove: //iframe
