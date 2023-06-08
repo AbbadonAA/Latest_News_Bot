@@ -12,7 +12,7 @@ from app.crud.user import (create_user, get_user_article_limit_from_db,
 from app.filters.articles import CategoryFilter, SourceFilter
 from app.models.articles import Article
 
-from .menu import article_keyboard
+from .menu import article_keyboard, get_article_url
 
 IMG_NOT_FOUND_PATH = str(
     BASE_DIR / "app" / "api" / "templates" / 'img_not_found.png')
@@ -61,14 +61,6 @@ async def get_articles(chat_id: int, category: str, source: str):
         if articles:
             await mark_articles_as_read(user, articles, session)
     return articles
-
-
-def get_article_url(article_id: int, domain: bool = settings.DOMAIN):
-    """Получение ссылки на страницу статьи."""
-    url = f'http://{settings.IP}:{settings.PORT}/articles/html/{article_id}'
-    if domain:
-        url = f'{settings.DOMAIN_NAME}/articles/html/{article_id}'
-    return url
 
 
 async def get_picture_for_msg(article: Article) -> str:

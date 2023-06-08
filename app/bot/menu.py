@@ -1,8 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
+from app.core.config import settings
 from app.filters.articles import CategoryFilter, SourceFilter
-
-from .jobs import get_article_url
 
 # Номера меню для ConversationHandler:
 MAIN_MENU_NUM, SOURCE_MENU_NUM, CATEGORY_MENU_NUM, SETTINGS_MENU_NUM = range(4)
@@ -36,12 +35,17 @@ def keyboard_constructor(
     return InlineKeyboardMarkup(keyboard)
 
 
+def get_article_url(article_id: int, domain: bool = settings.DOMAIN):
+    """Получение ссылки на страницу статьи."""
+    url = f'http://{settings.IP}:{settings.PORT}/articles/html/{article_id}'
+    if domain:
+        url = f'{settings.DOMAIN_NAME}/articles/html/{article_id}'
+    return url
+
+
 def article_keyboard(article_id: int):
     """Клавиатура для сообщения с новостной статьей."""
     url = get_article_url(article_id)
-    # Сюда условие - if instant_view
-    # Корректируем ссылку:
-    # https://t.me/iv?url=https://latest-news.zapto.org/articles/html/2900&rhash=f4642197829370
     keyboard = keyboard_constructor({'Читать далее': None}, url=url)
     return keyboard
 
