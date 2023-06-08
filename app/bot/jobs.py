@@ -124,7 +124,12 @@ async def send_article_iv_template(
     """Отправка ссылки на шаблон Instant View."""
     url = get_article_url(article.id)
     url = f'https://t.me/iv?url={url}&rhash={settings.RHASH}'
-    await context.bot.send_message(chat_id, url)
+    msg_text = (
+        f'<i>Категория: {article.category}</i>\n'
+        f'<i>Источник: {article.source}</i>\n\n'
+        f'{url}'
+    )
+    await context.bot.send_message(chat_id, msg_text)
 
 
 async def send_article(
