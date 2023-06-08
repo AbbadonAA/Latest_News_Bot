@@ -3,7 +3,7 @@ from loguru import logger
 from telegram import InputFile
 from telegram.ext import ContextTypes
 
-from app.core.config import BASE_DIR
+from app.core.config import BASE_DIR, settings
 from app.core.db import get_session
 from app.crud.articles import get_articles_from_db, mark_articles_as_read
 from app.crud.user import (create_user, get_user_article_limit_from_db,
@@ -63,6 +63,14 @@ async def get_articles(chat_id: int, category: str, source: str):
     return articles
 
 
+def get_article_url(article_id: int, domain: bool = settings.DOMAIN):
+    """Получение ссылки на страницу статьи."""
+    url = f'http://{settings.IP}:{settings.PORT}/articles/html/{article_id}'
+    if domain:
+        url = f'{settings.DOMAIN_NAME}/articles/html/{article_id}'
+    return url
+
+
 async def get_picture_for_msg(article: Article) -> str:
     """Получение картинки для превью статьи."""
     picture = article.picture_link
@@ -86,12 +94,12 @@ async def get_picture_for_msg(article: Article) -> str:
     return picture
 
 
-async def send_article(
+async def send_article_message(
     article: Article,
     chat_id: int,
     context: ContextTypes.DEFAULT_TYPE
 ):
-    """Отправка статьи пользователю"""
+    """Отправка сообщения со статьей пользователю"""
     title = article.title
     category = article.category
     overview = article.overview
@@ -114,6 +122,30 @@ async def send_article(
         reply_markup=keyboard,
         parse_mode='HTML'
     )
+
+
+async def send_article_iv_template(
+    article: Article,
+    chat_id: int,
+    context: ContextTypes.DEFAULT_TYPE,
+):
+    """Отправка ссылки на шаблон Instant View."""
+    url = get_article_url(article.id)
+    url = f'https://t.me/iv?url={url}&rhash={settings.RHASH}'
+    await context.bot.send_message(chat_id, url)
+
+
+async def send_article(
+    article: Article,
+    chat_id: int,
+    context: ContextTypes.DEFAULT_TYPE,
+    iv: bool = settings.INSTANT_VIEW
+):
+    """Отправка статьи пользователю."""
+    if iv and settings.RHASH:
+        await send_article_iv_template(article, chat_id, context)
+    else:
+        await send_article_message(article, chat_id, context)
 
 
 async def send_article_set_description(
