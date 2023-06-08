@@ -129,7 +129,7 @@ async def send_article_iv_template(
         f'<i>Источник: {article.source}</i>\n\n'
         f'{url}'
     )
-    await context.bot.send_message(chat_id, msg_text)
+    await context.bot.send_message(chat_id, msg_text, parse_mode='HTML')
 
 
 async def send_article(
