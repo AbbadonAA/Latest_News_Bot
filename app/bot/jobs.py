@@ -125,10 +125,16 @@ async def send_article_iv_template(
     url = get_article_url(article.id)
     url = f'https://t.me/iv?url={url}&rhash={settings.RHASH}'
     msg_text = (
+        f'<a href="{url}">{article.title}</a>\n\n'
         f'<i>Категория: {article.category}</i>\n'
-        f'<i>Источник: {article.source}</i>\n\n'
-        f'{url}'
+        f'<i>Источник: {article.source}</i>'
     )
+    # msg_text = (
+    #     f'<i>Категория: {article.category}</i>\n'
+    #     f'<i>Источник: {article.source}</i>\n\n'
+    #     f'<a href="{url}">{article.title}</a>'
+    #     f'{url}'
+    # )
     await context.bot.send_message(chat_id, msg_text, parse_mode='HTML')
 
 
