@@ -2,7 +2,10 @@
 
 ~version: "2.1"
 body: //article
+header: //header
 title: //h1
 published_date: //time
 image_url: $body//img/@src
+author: $header//p[2]/a
+author_url: $author/@href
 @remove: //iframe
