@@ -123,9 +123,10 @@ async def send_article_iv_template(
 ):
     """Отправка ссылки на шаблон Instant View."""
     url = get_article_url(article.id)
-    url = f'https://t.me/iv?url={url}&rhash={settings.RHASH}'
+    iv_url = f'https://t.me/iv?url={url}&rhash={settings.RHASH}'
     msg_text = (
-        f'<a href="{url}">{article.title}</a>\n\n'
+        f'<a href="{url}">{article.title}</a>\n'
+        f'<a href="{iv_url}"></a>\n'
         f'<i>Категория: {article.category}</i>\n'
         f'<i>Источник: {article.source}</i>\n'
     )
