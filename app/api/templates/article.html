@@ -13,6 +13,9 @@
         {% if category %}
         <p>Категория: {{ category }}</p>
         {% endif %}
+        {% if source %}
+        <p>Источник: <a href="{{ original_link }}">{{ source }}</a></p>
+        {% endif %}
     </header>
 
     <article>
@@ -60,14 +63,6 @@
             {% for author in authors %}
             <p>{{ author }}</p>
             {% endfor %}
-        {% endif %}
-        
-        {% if source %}
-            <p>Источник: <span class="source">{{ source }}</span></p>
-        {% endif %}
-        
-        {% if original_link %}
-            <p><a href="{{ original_link }}">Оригинал статьи</a></p>
         {% endif %}
 
     </article>
