@@ -213,28 +213,33 @@ DB_PORT=7000  # порт БД
 > **Warning**:
 > Следует учитывать, что режим Instant View корректно работает только с мобильной версией Telegram. При попытке просмотра статей в Telegram через браузер или десктопное приложение могут возникать различные ошибки. Это связано с самой реализацией Instant View. Для стабильной и корректной работы приложения на всех устройствах, вероятно, следует пожертвовать Instant View, не добавляя соответствующие строки в файл .env. - В этом случае пользователь будет получать ссылку и открывать её в браузере.
 
-3. Создайте директорию /infra:
+3. В случае запуска отображения статей в режиме Instant View - создайте свой [шаблон IV](https://instantview.telegram.org/) и укажите его rhash в файле .env:
+```dotenv
+RHASH=f4642197829222  # (пример) rhash вашего шаблона IV
+```
+
+4. Создайте директорию /infra:
 ```shell
 mkdir infra
 ```
-4. Разместите в директории /infra файл docker-compose.prod.yml
-5. Уточните в файле docker-compose.prod.yml переменные окружения:
+5. Разместите в директории /infra файл docker-compose.prod.yml
+6. Уточните в файле docker-compose.prod.yml переменные окружения:
 ```dotenv
 VIRTUAL_HOST=example.com (укажите Ваш домен)
 LETSENCRYPT_HOST=example.com (укажите Ваш домен)
 LETSENCRYPT_EMAIL=your_email@example.com (укажите Ваш email)
 ```
-6. Разместите в директории /infra файл docker-compose.nginx.yml
-7. Создайте сеть Docker:
+7. Разместите в директории /infra файл docker-compose.nginx.yml
+8. Создайте сеть Docker:
 ```shell
 docker network create nginx-proxy
 ```
-8. Запустите контейнеры:
+9. Запустите контейнеры:
 ```shell
 docker-compose -f docker-compose.nginx.yml up -d
 docker-compose -f docker-compose.prod.yml up -d
 ```
-9. Проект запущен в четырех контейнерах:
+10. Проект запущен в четырех контейнерах:
 - latest_news_bot
 - latest_news_db
 - nginx-proxy
