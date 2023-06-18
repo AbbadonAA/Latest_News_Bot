@@ -96,6 +96,7 @@ async def get_article_html(
         'picture': article.picture_link,
         'infographics': infographic_links,
         'video': article.video_link,
+        'video_preview_link': article.video_preview_link,
         'authors': authors,
         'source': article.source
     }
