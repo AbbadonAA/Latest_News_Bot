@@ -7,6 +7,7 @@ header: //header
 title: //h1
 published_date: //time
 image_url: $body//img/@src
+image_url: //head/meta[@property="og:image"]/@content
 author: $header//p[2]/a
 author_url: $author/@href
 @remove: //iframe
