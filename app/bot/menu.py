@@ -10,12 +10,15 @@ MAIN_MENU_TXT = 'Выберите действие:'
 SOURCE_MENU_TXT = 'Выберите источник из доступных:'
 CATEGORY_MENU_TXT = 'Выберите тему из доступных:'
 SETTINGS_MENU_TXT = 'Выбрано статей для получения: <b>{}</b>'.format
+# Кнопки:
+ALL_BTN = 'ВСЕ'
 
 
 def keyboard_constructor(
     buttons: dict[str, str],
-    n_cols: int = 5,
+    all_button: bool = False,
     back_button: str = None,
+    n_cols: int = 5,
     url: str = None
 ):
     """Конструктор клавиатур для различных меню."""
@@ -27,6 +30,11 @@ def keyboard_constructor(
                 for btn, clb in list(buttons.items())[i: i + n_cols]
             ]
         )
+    if all_button:
+        all_button = [
+            InlineKeyboardButton(ALL_BTN, callback_data=ALL_BTN, url=url)
+        ]
+        keyboard.append(all_button)
     if back_button:
         back_button = [
             InlineKeyboardButton('⬅ Назад', callback_data=back_button)
@@ -58,13 +66,15 @@ main_keyboard = keyboard_constructor(
     {'📰 Статьи': str(SOURCE_MENU_NUM), '⚒️ Настройки': str(SETTINGS_MENU_NUM)}
 )
 source_keyboard = keyboard_constructor(
-    {s.value: s.value for s in SourceFilter},
+    {s.value: s.value for s in SourceFilter if s != 'ВСЕ'},
+    all_button=True,
     back_button=str(MAIN_MENU_NUM)
 )
 category_keyboard = keyboard_constructor(
-    {c.value: c.value for c in CategoryFilter},
-    n_cols=4,
-    back_button=str(SOURCE_MENU_NUM)
+    {c.value: c.value for c in CategoryFilter if c != 'ВСЕ'},
+    all_button=True,
+    back_button=str(SOURCE_MENU_NUM),
+    n_cols=4
 )
 settings_keyboard = keyboard_constructor(
     {str(s): str(s) for s in range(1, 11)},
