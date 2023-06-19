@@ -77,6 +77,7 @@ class RbcSpider(scrapy.Spider):
             .css('link[itemprop="thumbnailUrl"]::attr(href)').get()
         )
         infographic_links = (response.css('div.article__text')
+                             .css('div.g-desktop-visible')
                              .css('div.article__picture__wrap')
                              .css('img::attr(src)').getall())
         authors = (response.css('span.article__authors__author__name::text')
