@@ -30,7 +30,9 @@
 
         {% if picture %}
         <figure>
+          <a href="{{ picture }}">
             <img src="{{ picture }}" alt="{{ title }}">
+          </a>
         </figure>
         {% endif %}
 
@@ -51,7 +53,9 @@
             <h2>Материалы статьи</h2>
             {% for infographic in infographics %}
             <figure>
+              <a href="{{ infographic }}">
                 <img src="{{ infographic }}" alt="Материалы">
+              </a>
             </figure>
             {% endfor %}
         </section>
