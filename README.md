@@ -69,7 +69,7 @@ POSTGRES_DB=news_db  # название БД
 POSTGRES_USER=postgres  # имя пользователя БД
 POSTGRES_PASSWORD=postgres  # пароль БД
 DB_HOST=localhost  # хост БД (для запуска через docker-compose заменить на имя сервиса с БД)
-DB_PORT=7000  # порт БД
+DB_PORT=6100  # порт БД (можно указать любой, но не забудьте внести изменения в файлы docker-compose)
  ``` 
 
 > **Warning**:
@@ -159,7 +159,7 @@ POSTGRES_DB=news_db  # название БД
 POSTGRES_USER=postgres  # имя пользователя БД
 POSTGRES_PASSWORD=postgres  # пароль БД
 DB_HOST=news_db  # хост БД
-DB_PORT=7000  # порт БД
+DB_PORT=6100  # порт БД (можно указать любой, но не забудьте внести изменения в файлы docker-compose)
  ``` 
 3. В директории приложения создайте директорию /infra:
 ```shell
@@ -207,7 +207,7 @@ POSTGRES_DB=news_db  # название БД
 POSTGRES_USER=postgres  # имя пользователя БД
 POSTGRES_PASSWORD=postgres  # пароль БД
 DB_HOST=news_db  # хост БД
-DB_PORT=7000  # порт БД
+DB_PORT=6100  # порт БД (можно указать любой, но не забудьте внести изменения в файлы docker-compose)
  ```
 
 > **Warning**:
