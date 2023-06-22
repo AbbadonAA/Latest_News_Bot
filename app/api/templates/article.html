@@ -6,13 +6,50 @@
     <meta property="og:image" content="{{ video_preview_link }}">
     <title>{{ title }}</title>
     <style>
+    .container {
+        max-width: 900px; /* Размер области контента */
+        margin-left: auto;
+        margin-right: auto;
+    }
+    h1 {
+        text-align: center;
+    }
+    body {
+        font-size: 18px; /* Размер шрифта */
+    }
+    p {
+        text-align: justify;
+    }
+    figure {
+        display: block;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
     img {
         max-width: 100%;
         height: auto;
     }
+    .video-container {
+        position: relative;
+        padding-top: 25px;
+        padding-bottom: 56.25%; /* 16:9 */
+        height: 0;
+        width: 100%;
+        margin: 0 auto;
+    }
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
     </style>
 </head>
 <body>
+  <div class="container">
     <header>
         {% if date %}
         <time datetime="{{ date.isoformat() }}">{{ date.strftime("%d.%m.%Y") }}</time>
@@ -65,7 +102,9 @@
         <section>
             <h2>Видео</h2>
             <p><a href="{{ video }}">Посмотреть видео</a></p>
-            <iframe width="560" height="315" src="{{ video }}" frameborder="0" allowfullscreen></iframe>
+            <div class="video-container">
+                <iframe width="300" height="150" src="{{ video }}" frameborder="0" allowfullscreen></iframe>
+            </div>
         </section>
         {% endif %}
         
@@ -77,5 +116,6 @@
         {% endif %}
 
     </article>
+  </div>
 </body>
 </html>
