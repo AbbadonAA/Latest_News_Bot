@@ -1,3 +1,4 @@
+from pathlib import Path
 from loguru import logger
 from telegram.ext import Application, ApplicationBuilder, PicklePersistence
 
@@ -8,7 +9,9 @@ from .handlers import conv_handler
 
 def create_bot() -> Application:
     """Создание бота."""
-    bot_persistance = PicklePersistence(settings.BOT_PERSISTENCE_FILE)
+    bot_persistence_path = Path(settings.BOT_PERSISTENCE_FILE)
+    bot_persistence_path.parent.mkdir(parents=True, exist_ok=True)
+    bot_persistance = PicklePersistence(str(bot_persistence_path))
     bot_instance = (
         ApplicationBuilder()
         .token(settings.BOT_TOKEN)
