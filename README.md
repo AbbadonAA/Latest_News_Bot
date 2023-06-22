@@ -103,7 +103,7 @@ Ngrok позволяет создавать временный
  4. Запустите контейнер с базой данных PostgreSQL (должен быть установлен Docker): 
  ```shell
  cd infra/
- docker-compose -f docker-compose.local.yml up news_db -d
+ docker-compose -f docker-compose.local.yml up -d news_db
  ``` 
  5. В корневой директории примените миграции для создания таблиц в БД: 
  ```shell
