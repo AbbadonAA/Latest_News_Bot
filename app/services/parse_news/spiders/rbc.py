@@ -64,10 +64,17 @@ class RbcSpider(scrapy.Spider):
         if overview:
             overview = overview.strip()
         text = response.css('div.article__text')
-        text = [p.xpath('string()').get().strip() for p in text.css('p')]
-        if text:
+        paragraphs = []
+        for element in text.xpath('.//p | .//li[not(div)]'):
+            element_text = element.xpath('string()').get().strip()
+            if element_text:
+                if element.root.tag == 'p':
+                    paragraphs.append(element_text)
+                elif element.root.tag == 'li':
+                    paragraphs.append('- ' + element_text)
+        if text and paragraphs:
             # Деление текста на абзацы и удаление лишних пробелов:
-            text = '\n'.join(t.strip() for t in text)
+            text = '\n'.join(p.strip() for p in paragraphs)
         picture_link = (response.css('div.article__main-image__wrap')
                         .css('img::attr(src)').get())
         video_link = (response.css(
