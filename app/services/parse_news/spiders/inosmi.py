@@ -63,7 +63,8 @@ class InosmiSpider(scrapy.Spider):
                    .css('a::text').getall())
         picture_link = response.css('div.media').css('img::attr(src)').get()
         video_link = response.css('div.media').css('iframe::attr(src)').get()
-        video_preview_link = ''
+        video_preview_link = response.css(
+            'div[itemprop="image"] a[itemprop="url"]::attr(href)').get()
         infographic_links = []
         article = dict(
             date=date,
