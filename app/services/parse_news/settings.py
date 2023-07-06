@@ -16,6 +16,8 @@ ITEM_PIPELINES = {
    "app.services.parse_news.pipelines.ArticlesToDBPipeline": 300,
 }
 
+TELNETCONSOLE_ENABLED = False
+
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
