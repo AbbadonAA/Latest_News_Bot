@@ -87,6 +87,10 @@ class RbcSpider(scrapy.Spider):
                              .css('div.g-desktop-visible')
                              .css('div.article__picture__wrap')
                              .css('img::attr(src)').getall())
+        if not infographic_links:
+            infographic_links = (response.css('div.article__text')
+                                 .css('picture.smart-image')
+                                 .css('img::attr(src)').getall())
         authors = (response.css('span.article__authors__author__name::text')
                    .getall())
         article = dict(
