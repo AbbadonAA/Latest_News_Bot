@@ -89,7 +89,7 @@ class RbcSpider(scrapy.Spider):
                              .css('img::attr(src)').getall())
         if not infographic_links:
             infographic_links = (response.css('div.article__text')
-                                 .css('picture.smart-image')
+                                 .css('div.gallery_vertical__item')
                                  .css('img::attr(src)').getall())
         authors = (response.css('span.article__authors__author__name::text')
                    .getall())
