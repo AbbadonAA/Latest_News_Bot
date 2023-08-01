@@ -1,6 +1,9 @@
 name: latest_news_workflow
 
-on: push
+on:
+  push:
+    branches:
+      - main
 
 jobs:
 
