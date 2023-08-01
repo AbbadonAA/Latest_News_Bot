@@ -75,6 +75,8 @@ class RbcSpider(scrapy.Spider):
         if text and paragraphs:
             # Деление текста на абзацы и удаление лишних пробелов:
             text = '\n'.join(p.strip() for p in paragraphs)
+        else:
+            text = None
         picture_link = (response.css('div.article__main-image__wrap')
                         .css('img::attr(src)').get())
         video_link = (response.css(
