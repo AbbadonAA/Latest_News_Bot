@@ -46,7 +46,9 @@ class RbcSpider(scrapy.Spider):
             # Пропуск нестандартных статей (онлайн репортажи и статьи РБК).
             if category not in RBC_CATEGORIES or 'Онлайн' in title:
                 continue
-            link = selector.css('a.item__link::attr(href)').get().strip()
+            # split('?')[] нужен, чтобы избежать дублирования РБК (2 ссылки)
+            link = selector.css(
+                'a.item__link::attr(href)').get().strip().split('?')[0]
             # Приведение категории статьи к стандартным для всех статей.
             category = STANDART_CATEGORIES[category]
             yield response.follow(
