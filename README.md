@@ -229,7 +229,7 @@ VIRTUAL_HOST=example.com (укажите Ваш домен)
 LETSENCRYPT_HOST=example.com (укажите Ваш домен)
 LETSENCRYPT_EMAIL=your_email@example.com (укажите Ваш email)
 ```
-7. Разместите в директории /infra файл docker-compose.nginx.yml
+7. Разместите в директории /infra (лучше создать отдельную директорию) файл docker-compose.nginx.yml
 8. Создайте сеть Docker:
 ```shell
 docker network create nginx-proxy
