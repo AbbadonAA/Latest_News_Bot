@@ -42,7 +42,7 @@ class RbcSpider(scrapy.Spider):
             category = category.replace(',', '').strip()
             # split('?')[] нужен, чтобы избежать дублирования РБК (2 ссылки)
             title = selector.css(
-                'span.item__title::text').get().strip().split('?')[0]
+                'span.normal-wrap::text').get().strip().split('?')[0]
             # Пропуск нестандартных статей (онлайн репортажи и статьи РБК).
             if category not in RBC_CATEGORIES or 'Онлайн' in title:
                 continue
